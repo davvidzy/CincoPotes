@@ -1415,28 +1415,45 @@ CTA FIXO - aparece após o hero, some dentro da oferta
   opacity: 1;
   visibility: visible;
 }
-/* lockup da marca a esquerda */
+/* lockup da marca a esquerda - compacto para sobrar espaço ao botão */
 .sticky-cta .brand {
   flex: none;
-  gap: 7px;
+  gap: 5px;
+}
+.sticky-cta .brand-mark {
+  transform: scale(0.82);
+  transform-origin: left center;
 }
 .sticky-cta .brand-name {
-  font-size: 15px;
+  font-size: 12.5px;
+  white-space: nowrap;
 }
-/* CTA: rotulo em cima, preco ancorado embaixo */
+/* CTA: rotulo em cima, preco ancorado embaixo, sempre em uma linha */
 .sticky-cta .btn {
   flex: 1;
   flex-direction: column;
   gap: 2px;
   min-height: 52px;
-  padding: 8px 12px;
+  padding: 8px 10px;
   box-shadow: 0 2px 0 var(--brick-ink);
+  min-width: 0;
 }
 .sticky-buy-label {
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   line-height: 1.1;
+  white-space: nowrap;
+}
+/* telas bem estreitas: esconde o nome da marca, mantém só o ícone,
+   liberando espaço para o rótulo do botão caber em uma linha */
+@media (max-width: 360px) {
+  .sticky-cta .brand-name {
+    display: none;
+  }
+  .sticky-buy-label {
+    font-size: 12.5px;
+  }
 }
 .sticky-buy-price {
   display: flex;
@@ -1444,6 +1461,7 @@ CTA FIXO - aparece após o hero, some dentro da oferta
   gap: 6px;
   font-size: 12.5px;
   line-height: 1.1;
+  white-space: nowrap;
 }
 .sticky-buy-price s {
   font-weight: 500;
@@ -1455,7 +1473,7 @@ CTA FIXO - aparece após o hero, some dentro da oferta
 }
 @media (min-width: 520px) {
   .sticky-cta {
-    border-radius: 0 0 28px 28px;
+    border-radius: 0;
     right: auto;
     left: 50%;
     transform: translate(-50%, 110%);
