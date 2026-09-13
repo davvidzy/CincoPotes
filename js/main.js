@@ -133,23 +133,28 @@
         revealObs.observe(el);
       });
 
-      /* o rootMargin negativo cria uma faixa morta no fim da página: o último
-         item do rodapé nunca entraria na zona de disparo. No fim do scroll,
-         libera o que sobrou. */
-      function flushAtBottom() {
-        if (
-          window.innerHeight + window.pageYOffset <
-          document.body.scrollHeight - 4
-        )
-          return;
+      /* Rede de segurança, 150ms depois que o scroll para. Cobre dois furos
+         do observer:
+         1. o rootMargin negativo cria uma faixa morta no fim da página - o
+            último item do rodapé nunca entraria na zona de disparo;
+         2. num scroll muito rápido o IntersectionObserver pode não chegar a
+            registrar um elemento que passou voando pela tela.
+         Nos dois casos, libera o que já deveria estar visível. */
+      var flushTimer;
+      function flushMissed() {
         pending = pending.filter(function (el) {
           if (el.classList.contains('is-in')) return false;
+          if (el.getBoundingClientRect().top > window.innerHeight) return true;
           reveal(el);
           return false;
         });
-        window.removeEventListener('scroll', flushAtBottom);
+        if (!pending.length) window.removeEventListener('scroll', onScroll);
       }
-      window.addEventListener('scroll', flushAtBottom, { passive: true });
+      function onScroll() {
+        clearTimeout(flushTimer);
+        flushTimer = setTimeout(flushMissed, 150);
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
     }
   }
 })();

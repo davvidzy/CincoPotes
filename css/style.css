@@ -58,6 +58,16 @@ Viewport alvo: 390px. Uma coluna. Toque mínimo 44px.
   /* movimento - reveal ao scroll */
   --ease-rv: cubic-bezier(0.22, 0.61, 0.36, 1);
   --dur-rv: 0.62s;
+
+  /* botoes - o rotulo nunca quebra, entao a fonte acompanha a largura da
+     tela. O teto de 15.8px e o que faz o CTA mais longo ("Comecar minha
+     primeira semana") caber em uma linha dentro do card da oferta em 390px. */
+  --btn-fs: clamp(13px, 4vw, 15.8px);
+  --btn-pad-x: 16px;
+  --btn-gap: 8px;
+
+  /* largura maxima do conteudo - cresce nos breakpoints maiores */
+  --content: 390px;
 }
 *,
 *::before,
@@ -77,20 +87,11 @@ body {
   -webkit-font-smoothing: antialiased;
   color-scheme: light;
 }
-/* moldura de revisão em telas largas - o conteúdo permanece em 390px */
-@media (min-width: 520px) {
-  body {
-    background: #e6e1d8;
-    padding: 32px 0;
-  }
-  .shell {
-    box-shadow: 0 24px 60px -24px rgba(28, 26, 23, 0.35);
-    border-radius: 28px;
-    overflow: hidden;
-  }
-}
+/* Ate 639px a shell e a coluna de 390px. A partir do tablet ela passa a
+   ocupar a largura toda (ver bloco BREAKPOINTS no fim do arquivo), para as
+   faixas escuras sangrarem de ponta a ponta. */
 .shell {
-  width: min(390px, 100%);
+  width: min(var(--content), 100%);
   margin-inline: auto;
   background: var(--paper);
   position: relative;
@@ -208,20 +209,27 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: var(--btn-gap);
   min-height: 56px;
-  padding: 14px 20px;
+  padding: 14px var(--btn-pad-x);
   font-family: var(--sans);
-  font-size: 17px;
+  font-size: var(--btn-fs);
   font-weight: 700;
   letter-spacing: -0.01em;
   text-decoration: none;
   text-align: center;
+  white-space: nowrap; /* rotulo de CTA sempre em uma linha */
   border: 0;
   border-radius: var(--r-pill);
   cursor: pointer;
   transition: transform 0.12s ease, box-shadow 0.12s ease,
     background-color 0.12s ease;
+}
+/* telas muito estreitas: a seta e decorativa e o espaco dela faz falta */
+@media (max-width: 359px) {
+  .btn .arrow {
+    display: none;
+  }
 }
 .btn-primary {
   background: var(--brick);
@@ -1181,7 +1189,9 @@ OFERTA - o único card com destaque real
   color: var(--forest-2);
 }
 .offer-price {
-  padding: var(--s6) var(--s5);
+  /* padding lateral menor que o resto do card: e aqui que mora o CTA mais
+     longo da pagina e cada pixel conta para ele nao quebrar */
+  padding: var(--s6) var(--s4);
 }
 .price-context {
   font-size: 14px;
@@ -1626,6 +1636,282 @@ A lista abaixo espelha REVEAL_SELECTOR em js/main.js - manter em sincronia.
 }
 .js .sec-head > .t-eyebrow.is-in .mark i:nth-child(5) {
   transition-delay: 0.24s;
+}
+
+/* ============================================================
+BREAKPOINTS - tablet (>=640px) e desktop (>=1100px)
+
+Ate 639px vale o layout mobile: coluna de 390px centralizada.
+Daí para cima a .shell ocupa a largura toda para as faixas escuras
+sangrarem de ponta a ponta, e o conteudo e centralizado pelo padding
+das proprias secoes - sem precisar de wrapper novo no HTML:
+
+  padding-inline: max(gutter, (100% - content) / 2)
+
+O max() faz a conta degradar sozinha: enquanto a tela for menor que
+--content, vale o gutter; depois disso o conteudo trava na largura.
+============================================================ */
+
+/* ---------------- TABLET ---------------- */
+@media (min-width: 640px) {
+  :root {
+    --content: 720px;
+    --gutter: 40px;
+    --section: 76px;
+    --btn-fs: 17px;
+    --btn-pad-x: 26px;
+    --btn-gap: 10px;
+  }
+  .shell {
+    width: 100%;
+  }
+  /* .hero entra na lista por especificidade: a regra base dela usa o atalho
+     `padding` com --gutter e venceria um `section { padding-inline }` sozinho,
+     deixando so a hero sangrando a largura toda */
+  section,
+  .hero,
+  .site-header,
+  .site-footer {
+    padding-inline: max(var(--gutter), (100% - var(--content)) / 2);
+  }
+
+  /* escala tipografica sobe junto com a largura */
+  .t-display {
+    font-size: 44px;
+  }
+  .t-h2 {
+    font-size: 32px;
+  }
+  .t-lead {
+    font-size: 19px;
+  }
+  .t-body {
+    font-size: 17px;
+  }
+  .site-header {
+    height: 64px;
+  }
+  .brand-name {
+    font-size: 19px;
+  }
+
+  /* medida de leitura confortavel para blocos de texto corrido */
+  .sec-head,
+  .pain-close,
+  .compare-note,
+  .hero .t-lead {
+    max-width: 620px;
+  }
+
+  /* CTA deixa de ser bloco: largura pelo conteudo */
+  .hero-cta .btn-block,
+  .gallery-cta .btn-block,
+  .closing .btn-block {
+    display: inline-flex;
+    width: auto;
+    min-width: 320px;
+  }
+  .hero .cta-note,
+  .gallery-cta {
+    text-align: left;
+  }
+  .hero .cta-note {
+    justify-content: flex-start;
+  }
+
+  /* carrosseis perdem a sangria negativa: agora rolam dentro do conteudo */
+  .gallery,
+  .quote-row {
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+
+  .numbers {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .pain-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* listas em duas colunas - borda so no topo para nao duplicar no meio */
+  .deliver,
+  .objections {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--s7);
+  }
+  .deliver li:last-child,
+  .objection:last-child {
+    border-bottom: 0;
+  }
+
+  /* as quebras de linha do card da oferta foram feitas a mao para 390px;
+     com mais largura elas cortam a frase no lugar errado
+     (a quebra do titulo de fechamento e retorica, essa fica) */
+  .offer-name br,
+  .price-context br,
+  .price-terms br {
+    display: none;
+  }
+
+  /* blocos que nao devem esticar junto com a tela */
+  .offer-card {
+    max-width: 540px;
+    margin-inline: auto;
+  }
+  /* o card da oferta e centralizado, entao o titulo dele acompanha */
+  .offer .sec-head {
+    text-align: center;
+    margin-inline: auto;
+  }
+  .guarantee,
+  .faq,
+  .quote-hero {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+
+  .closing {
+    text-align: center;
+  }
+  .closing > * {
+    margin-inline: auto;
+  }
+  .closing p {
+    max-width: 620px;
+  }
+
+  .site-footer {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: var(--s8);
+    align-items: center;
+  }
+  .footer-links {
+    margin-top: 0;
+    justify-content: flex-end;
+  }
+  .site-footer p {
+    grid-column: 1 / -1;
+  }
+
+  /* barra fixa: centralizada e com o topo arredondado, ja que o pe dela
+     encosta na borda da janela */
+  .sticky-cta {
+    width: min(560px, 100%);
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+    padding-inline: var(--s5);
+  }
+}
+
+/* ---------------- DESKTOP ---------------- */
+@media (min-width: 1024px) {
+  :root {
+    --content: 1440px;
+    --gutter: 56px;
+    --section: 100px;
+  }
+  .t-display {
+    font-size: 56px;
+  }
+  .t-h2 {
+    font-size: 38px;
+  }
+  .t-lead {
+    font-size: 20px;
+  }
+
+  /* HERO em duas colunas: argumento a esquerda, produto a direita.
+     Os filhos sao posicionados direto no grid (o HTML nao tem wrapper). */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.02fr 0.98fr;
+    column-gap: 72px;
+    align-items: start;
+    padding-block: 88px 104px;
+  }
+  .hero > .t-display {
+    grid-area: 1 / 1;
+  }
+  .hero > .t-lead {
+    grid-area: 2 / 1;
+  }
+  .hero > .hero-cta {
+    grid-area: 3 / 1;
+  }
+  .hero > .hero-facts {
+    grid-area: 4 / 1;
+  }
+  .hero > .board-stack {
+    grid-area: 1 / 2 / span 4 / auto;
+    align-self: center;
+    margin-top: 0;
+  }
+
+  /* carrosseis viram grade: arrastar na horizontal e gesto de toque */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--s5);
+    overflow: visible;
+    scroll-snap-type: none;
+    padding-bottom: 0;
+  }
+  .quote-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--s4);
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+  /* lado a lado, as assinaturas precisam bater na mesma linha de base */
+  .quote-sm {
+    display: flex;
+    flex-direction: column;
+  }
+  .quote-sm .quote-who {
+    margin-top: auto;
+    padding-top: var(--s4);
+  }
+  .dots,
+  .swipe-hint {
+    display: none;
+  }
+
+  .pain-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .compare {
+    max-width: 820px;
+    column-gap: var(--s8);
+  }
+  .steps {
+    max-width: 760px;
+  }
+  .offer-card {
+    max-width: 560px;
+  }
+  .guarantee,
+  .faq {
+    max-width: 820px;
+  }
+
+  /* alvos de mouse: o hover passa a valer, o toque nao e mais a regra */
+  .faq summary:hover .caret {
+    border-color: var(--brick);
+    color: var(--brick);
+  }
+  .btn-primary:hover {
+    background: var(--brick-ink);
+  }
+}
+
+/* a barra fixa de compra existe para o polegar; no desktop o header e a
+   secao de oferta ja dao o caminho, entao ela sai de cena */
+@media (min-width: 1024px) {
+  .sticky-cta {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
