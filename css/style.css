@@ -54,6 +54,10 @@ Viewport alvo: 390px. Uma coluna. Toque mínimo 44px.
   --shadow-cta: 0 2px 0 var(--brick-ink),
     0 10px 22px -10px rgba(180, 72, 42, 0.55);
   --shadow-bar: 0 -8px 24px -12px rgba(28, 26, 23, 0.22);
+
+  /* movimento - reveal ao scroll */
+  --ease-rv: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur-rv: 0.62s;
 }
 *,
 *::before,
@@ -1481,6 +1485,147 @@ CTA FIXO - aparece após o hero, some dentro da oferta
   .sticky-cta.show {
     transform: translate(-50%, 0);
   }
+}
+
+/* ============================================================
+REVEAL AO SCROLL - fade + subida curta, dispara uma vez por elemento.
+Tudo fica atras de :where(.js): a classe so entra no <html> pelo script
+inline do <head>, e apenas quando o usuario NAO pede menos movimento.
+Sem JS (ou se main.js falhar) nada fica escondido.
+A lista abaixo espelha REVEAL_SELECTOR em js/main.js - manter em sincronia.
+============================================================ */
+:where(.js)
+  :where(
+    .hero > *,
+    .sec-head > *,
+    .pain-list li,
+    .pain-close,
+    .compare-col,
+    .compare-note,
+    .step,
+    .gallery-wrap,
+    .gallery-cta,
+    .deliver li,
+    .extras,
+    .number,
+    .quote-hero,
+    .objection,
+    .offer-card,
+    .price-val,
+    .guarantee,
+    .faq details,
+    .closing > *,
+    .site-footer > *
+  ) {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity var(--dur-rv) var(--ease-rv),
+    transform var(--dur-rv) var(--ease-rv);
+  transition-delay: var(--rv-delay, 0s);
+}
+/* estado final - a classe entra pelo IntersectionObserver */
+.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* titulos: cortina de cima para baixo, um pouco mais lenta que o resto */
+:where(.js) :where(.hero > .t-display, .sec-head > .t-h2, .closing > h2) {
+  clip-path: inset(0 0 100% 0);
+  transform: translateY(8px);
+  transition: opacity 0.5s var(--ease-rv), transform 0.7s var(--ease-rv),
+    clip-path 0.7s var(--ease-rv);
+  transition-delay: var(--rv-delay, 0s);
+}
+.hero > .t-display.is-in,
+.sec-head > .t-h2.is-in,
+.closing > h2.is-in {
+  /* inset negativo = sem corte visivel, mas ainda animavel */
+  clip-path: inset(-14% -10%);
+}
+
+/* quadro da semana: sobe com um leve ganho de escala */
+:where(.js) :where(.board-stack) {
+  transform: translateY(16px) scale(0.985);
+}
+.board-stack.is-in {
+  transform: none;
+}
+
+/* comparacao: colunas entram de lados opostos */
+:where(.js) :where(.compare-col:first-child) {
+  transform: translate(-8px, 12px);
+}
+:where(.js) :where(.compare-col:last-child) {
+  transform: translate(8px, 12px);
+}
+.compare-col.is-in {
+  transform: none;
+}
+
+/* depoimentos: o carrossel é o gatilho e os cards entram em cascata.
+   Revelar cada card sozinho deixaria o 3º (fora da tela na horizontal)
+   invisível até alguém arrastar. */
+:where(.js) :where(.quote-row .quote-sm) {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity var(--dur-rv) var(--ease-rv),
+    transform var(--dur-rv) var(--ease-rv);
+}
+.quote-row.is-in .quote-sm {
+  opacity: 1;
+  transform: none;
+}
+.quote-row.is-in .quote-sm:nth-child(2) {
+  transition-delay: 0.07s;
+}
+.quote-row.is-in .quote-sm:nth-child(3) {
+  transition-delay: 0.14s;
+}
+
+/* preco: assenta logo depois do card da oferta */
+:where(.js) :where(.price-val) {
+  --rv-delay: 0.18s;
+  transform: translateY(6px) scale(0.97);
+  transition-duration: 0.5s;
+}
+.price-val.is-in {
+  transform: none;
+}
+
+/* linha da timeline desenha de cima para baixo junto com o passo */
+.js .step::before {
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition: transform 0.6s var(--ease-rv) 0.12s;
+}
+.js .step.is-in::before {
+  transform: scaleY(1);
+}
+
+/* barras da marca no eyebrow sobem como um equalizador */
+.js .sec-head > .t-eyebrow .mark i {
+  transform: scaleY(0);
+  transform-origin: bottom center;
+  transition: transform 0.42s var(--ease-rv);
+}
+.js .sec-head > .t-eyebrow.is-in .mark i {
+  transform: scaleY(1);
+}
+.js .sec-head > .t-eyebrow.is-in .mark i:nth-child(1) {
+  transition-delay: 0.04s;
+}
+.js .sec-head > .t-eyebrow.is-in .mark i:nth-child(2) {
+  transition-delay: 0.09s;
+}
+.js .sec-head > .t-eyebrow.is-in .mark i:nth-child(3) {
+  transition-delay: 0.14s;
+}
+.js .sec-head > .t-eyebrow.is-in .mark i:nth-child(4) {
+  transition-delay: 0.19s;
+}
+.js .sec-head > .t-eyebrow.is-in .mark i:nth-child(5) {
+  transition-delay: 0.24s;
 }
 
 @media (prefers-reduced-motion: reduce) {

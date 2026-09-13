@@ -16,6 +16,27 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/style.css" />
+    <!-- Liga o reveal ao scroll antes do primeiro paint (evita piscada).
+         Não entra se o usuário pede menos movimento, e um timeout de
+         segurança libera o conteúdo caso main.js não carregue. -->
+    <script>
+      (function () {
+        var r = document.documentElement;
+        try {
+          if (
+            window.matchMedia &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches
+          )
+            return;
+        } catch (e) {
+          return;
+        }
+        r.className += ' js';
+        window.__rvSafety = setTimeout(function () {
+          r.classList.remove('js');
+        }, 2500);
+      })();
+    </script>
     <script src="js/main.js" defer></script>
 
     <!-- Meta Pixel Code -->
