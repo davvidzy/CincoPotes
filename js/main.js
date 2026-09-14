@@ -66,7 +66,6 @@
     '.price-block',
     '.desconto > .btn',
     '.passo',
-    '.passos > .btn-ghost',
     '.apoio-card',
     '.numero',
     '.quote',
