@@ -6,13 +6,14 @@
     <title>Cinco Potes: cozinhe 1 dia, coma a semana toda</title>
     <meta
       name="description"
-      content="Resolva os almoços da semana em uma tarde de domingo. Plano de 8 semanas, listas de compras, sequência de preparo e mapa de armazenamento."
+      content="Prepare 5 refeições num único domingo, em cerca de 2h30. Plano de 8 semanas, listas de compras, sequência de preparo e mapa de armazenamento."
     />
+    <meta name="theme-color" content="#FBF7F0" />
     <link rel="icon" href="favicon.ico" sizes="any" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/style.css" />
@@ -116,7 +117,42 @@
     <!-- End Utmify Pixel Code -->
   </head>
   <body>
-    <div class="shell">
+    <!-- Ícones reutilizados via <use>. Mantidos em um sprite para não repetir
+         os paths em cada card. -->
+    <svg class="sprite" aria-hidden="true" focusable="false">
+      <symbol id="i-calendar" viewBox="0 0 24 24">
+        <rect x="3" y="5" width="18" height="16" rx="2.5" />
+        <path d="M3 10h18M8 3v4M16 3v4" />
+        <path d="M8 14h.01M12 14h.01M16 14h.01M8 17.5h.01M12 17.5h.01" />
+      </symbol>
+      <symbol id="i-list" viewBox="0 0 24 24">
+        <path
+          d="M9 4H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"
+        />
+        <rect x="9" y="2.5" width="6" height="3.5" rx="1.2" />
+        <path d="M8.5 12.2l1.6 1.6 3-3.2M14.2 16.6h2.3M8.5 16.6h2.6" />
+      </symbol>
+      <symbol id="i-fridge" viewBox="0 0 24 24">
+        <rect x="5" y="2.5" width="14" height="19" rx="2.5" />
+        <path d="M5 10h14M8.5 6v2M8.5 13v3" />
+      </symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24">
+        <path d="M12 2.8l7.2 2.7v6c0 4.6-3 8.3-7.2 9.7-4.2-1.4-7.2-5.1-7.2-9.7v-6z" />
+        <path d="M8.8 11.9l2.3 2.3 4.1-4.4" />
+      </symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24">
+        <rect x="4.5" y="10" width="15" height="11" rx="2.5" />
+        <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+      </symbol>
+      <symbol id="i-bolt" viewBox="0 0 24 24">
+        <path d="M13.2 2.5L4.8 13.4h5.6l-.6 8.1 8.4-10.9h-5.6z" />
+      </symbol>
+      <symbol id="i-chevron" viewBox="0 0 24 24">
+        <path d="M5 9l7 7 7-7" />
+      </symbol>
+    </svg>
+
+    <div class="shell" id="top">
       <!-- ============ HEADER ============ -->
       <header class="site-header">
         <a class="brand" href="#top" aria-label="Cinco Potes - início">
@@ -125,1141 +161,509 @@
           ></span>
           <span class="brand-name">Cinco Potes</span>
         </a>
-        <a class="header-link" href="#oferta">Ver oferta</a>
       </header>
 
-      <!-- ============ HERO ============ -->
-      <section class="hero" id="top">
-        <h1 class="t-display">
-          Resolva os almoços da semana em <em>uma tarde de domingo</em>.
-        </h1>
-        <p class="t-lead">
-          O Cinco Potes diz o que comprar, em que ordem preparar e como guardar
-          os cinco almoços da semana.
-        </p>
-
-        <div class="hero-cta">
-          <a class="btn btn-primary btn-block" href="#oferta">
-            Quero organizar minha semana
-            <span class="arrow" aria-hidden="true">→</span>
-          </a>
-          <p class="cta-note">
-            Acesso imediato <i class="dot-sep" aria-hidden="true"></i> Material
-            digital <i class="dot-sep" aria-hidden="true"></i>
-            7 dias de garantia
+      <main>
+        <!-- ============ HERO ============ -->
+        <section class="hero">
+          <h1 class="t-display">Sua semana de marmitas em apenas 2:30 hrs</h1>
+          <p class="t-lead">
+            Prepare 5 refeições num único domingo e ganhe tempo, saúde e
+            economia todos os dias.
           </p>
-        </div>
 
-        <!-- prévia visível já na primeira tela: o produto é tangível -->
-        <div class="board-stack">
-          <span class="sheet sheet-far" aria-hidden="true"></span>
-          <span class="sheet sheet-near" aria-hidden="true"></span>
-          <div
-            class="week-board"
-            role="img"
-            aria-label="Exemplo de plano semanal: cinco almoços de segunda a sexta, com indicação de geladeira ou freezer."
-          >
-            <div class="wb-head">
-              <span class="wb-title">Plano da semana</span>
-              <span class="chip">Semana 1 de 8</span>
-            </div>
-            <div class="wb-rows">
-              <div class="wb-row">
-                <span class="wb-day">SEG</span
-                ><span class="wb-meal">Frango ao limão · arroz · brócolis</span
-                ><span class="wb-tag">Geladeira</span>
-              </div>
-              <div class="wb-row">
-                <span class="wb-day">TER</span
-                ><span class="wb-meal">Carne moída · purê · vagem</span
-                ><span class="wb-tag">Geladeira</span>
-              </div>
-              <div class="wb-row">
-                <span class="wb-day">QUA</span
-                ><span class="wb-meal">Strogonoff leve · arroz</span
-                ><span class="wb-tag frz">Freezer</span>
-              </div>
-              <div class="wb-row">
-                <span class="wb-day">QUI</span
-                ><span class="wb-meal">Peixe assado · legumes · cuscuz</span
-                ><span class="wb-tag frz">Freezer</span>
-              </div>
-              <div class="wb-row">
-                <span class="wb-day">SEX</span
-                ><span class="wb-meal">Feijoada magra · arroz · couve</span
-                ><span class="wb-tag frz">Freezer</span>
-              </div>
-            </div>
-            <div class="wb-foot">
-              <span>5 potes montados</span><span>1 sessão de preparo</span>
-            </div>
+          <div class="hero-cta">
+            <a
+              class="btn btn-primary"
+              href="https://pay.hotmart.com/X107571787Q"
+              data-checkout
+            >
+              Adquirir Guia Agora
+              <span class="arrow" aria-hidden="true">→</span>
+            </a>
+            <p class="cta-note">
+              <span>Acesso imediato</span>
+              <i class="dot-sep" aria-hidden="true"></i>
+              <span>Material digital</span>
+              <i class="dot-sep" aria-hidden="true"></i>
+              <span>7 dias de garantia</span>
+            </p>
           </div>
-        </div>
+        </section>
 
-        <div class="hero-facts">
-          <div class="hero-fact"><b>8</b><span>semanas prontas</span></div>
-          <div class="hero-fact"><b>40</b><span>almoços planejados</span></div>
-          <div class="hero-fact"><b>1×</b><span>cozinhar por semana</span></div>
-        </div>
-      </section>
-
-      <!-- ============ PROBLEMA ============ -->
-      <section class="band-forest" aria-labelledby="problema-t">
-        <div class="sec-head">
-          <span class="t-eyebrow"
-            ><span class="mark" aria-hidden="true"
-              ><i></i><i></i><i></i><i></i><i></i></span
-            >O problema real</span
-          >
-          <h2 class="t-h2" id="problema-t">
-            Cozinhar não é a parte difícil. Decidir é.
-          </h2>
-        </div>
-        <ul class="pain-list">
-          <li>
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.9"
-              aria-hidden="true"
-            >
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 8v5M12 16.4v.2" /></svg
-            ><span>Abrir a geladeira às 11h30 sem ideia do que fazer.</span>
-          </li>
-          <li>
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.9"
-              aria-hidden="true"
-            >
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 7.5v5l3.5 2" /></svg
-            ><span>Perder tempo decidindo o almoço todos os dias.</span>
-          </li>
-          <li>
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.9"
-              aria-hidden="true"
-            >
-              <path
-                d="M4 6h16l-1.4 11.2a2 2 0 0 1-2 1.8H7.4a2 2 0 0 1-2-1.8L4 6Z"
-              />
-              <path
-                d="M9 6V4.6A1.6 1.6 0 0 1 10.6 3h2.8A1.6 1.6 0 0 1 15 4.6V6"
-              /></svg
-            ><span>Comprar no mercado sem lista e voltar sem o essencial.</span>
-          </li>
-          <li>
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.9"
-              aria-hidden="true"
-            >
-              <path d="M3 12h18M7 12V6.5M12 12V5M17 12v-4" />
-              <path d="M5 12v5.5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V12" /></svg
-            ><span
-              >Cozinhar quatro, cinco vezes na semana - sempre com pressa.</span
-            >
-          </li>
-          <li>
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.9"
-              aria-hidden="true"
-            >
-              <rect x="5" y="3" width="14" height="18" rx="2.5" />
-              <path d="M5 11h14M9 6.5v1.5M9 14.5V16" /></svg
-            ><span
-              >Não saber o que aguenta a geladeira e o que deve ir ao
-              freezer.</span
-            >
-          </li>
-          <li>
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.9"
-              aria-hidden="true"
-            >
-              <path d="M7 20h10M12 16v4" />
-              <path
-                d="M4.5 5.5h15L18 13a4 4 0 0 1-4 3h-4a4 4 0 0 1-4-3L4.5 5.5Z"
-              /></svg
-            ><span>Jogar comida fora porque sobrou muito de uma coisa só.</span>
-          </li>
-        </ul>
-        <p class="pain-close">
-          Não falta vontade de cozinhar. Falta um sistema que já tenha decidido
-          por você.
-        </p>
-      </section>
-
-      <!-- ============ SOLUÇÃO / TRANSFORMAÇÃO ============ -->
-      <section aria-labelledby="solucao-t">
-        <div class="sec-head">
-          <span class="t-eyebrow"
-            ><span class="mark" aria-hidden="true"
-              ><i></i><i></i><i></i><i></i><i></i></span
-            >A virada</span
-          >
-          <h2 class="t-h2" id="solucao-t">
-            De improviso diário para uma rotina previsível.
-          </h2>
-          <p class="t-body">
-            O Cinco Potes troca cinco decisões por semana por uma única sessão
-            de preparo.
-          </p>
-        </div>
-        <div class="compare">
-          <div class="compare-col">
-            <p class="compare-label">
-              <svg
-                viewBox="0 0 24 24"
-                width="14"
-                height="14"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.2"
-                aria-hidden="true"
-              >
-                <path d="M6 6l12 12M18 6 6 18" />
-              </svg>
-              Hoje
-            </p>
-            <ul>
-              <li>Decide na hora da fome</li>
-              <li>Mercado sem lista</li>
-              <li>Cozinha 4-5× por semana</li>
-              <li>Sobra e desperdício</li>
-              <li>Delivery de emergência</li>
-            </ul>
+        <!-- ============ O QUE VOCÊ RECEBE ============ -->
+        <section class="band-forest receber" aria-labelledby="receber-t">
+          <div class="sec-head">
+            <h2 class="t-h2" id="receber-t">O que você recebe</h2>
           </div>
-          <div class="compare-col">
-            <p class="compare-label">
-              <svg
-                viewBox="0 0 24 24"
-                width="14"
-                height="14"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.4"
-                aria-hidden="true"
-              >
-                <path d="M4 12.5 9.5 18 20 6.5" />
-              </svg>
-              Com o sistema
-            </p>
-            <ul>
-              <li>Semana já decidida</li>
-              <li>Lista pronta por setor</li>
-              <li>Um preparo, cinco potes</li>
-              <li>Porções na medida</li>
-              <li>Almoço pronto na geladeira</li>
-            </ul>
-          </div>
-        </div>
-        <p class="compare-note">
-          Não é um livro de receitas. É <b>um método de organização</b> - plano,
-          compra, preparo e armazenamento na mesma sequência, toda semana.
-        </p>
-      </section>
 
-      <!-- ============ COMO FUNCIONA ============ -->
-      <section class="band-surface" aria-labelledby="como-t">
-        <div class="sec-head">
-          <span class="t-eyebrow"
-            ><span class="mark" aria-hidden="true"
-              ><i></i><i></i><i></i><i></i><i></i></span
-            >Como funciona</span
-          >
-          <h2 class="t-h2" id="como-t">Cinco passos, sempre na mesma ordem.</h2>
-          <p class="t-body">Você não precisa inventar nada. Só seguir.</p>
-        </div>
-        <ol class="steps">
-          <li class="step">
-            <span class="step-num" aria-hidden="true">1</span>
-            <div class="step-body">
-              <h3 class="t-h3">Planeje</h3>
-              <p>
-                Abra a semana do plano e veja os cinco almoços já definidos.
-              </p>
-              <span class="step-when">2 minutos</span>
-            </div>
-          </li>
-          <li class="step">
-            <span class="step-num" aria-hidden="true">2</span>
-            <div class="step-body">
-              <h3 class="t-h3">Compre</h3>
-              <p>Leve a lista da semana, organizada por setor do mercado.</p>
-              <span class="step-when">Sábado</span>
-            </div>
-          </li>
-          <li class="step">
-            <span class="step-num" aria-hidden="true">3</span>
-            <div class="step-body">
-              <h3 class="t-h3">Prepare</h3>
-              <p>
-                Siga os blocos de preparo: o que vai ao fogo primeiro, o que
-                espera, o que se corta enquanto cozinha.
-              </p>
-              <span class="step-when">Domingo · ~2h30</span>
-            </div>
-          </li>
-          <li class="step">
-            <span class="step-num" aria-hidden="true">4</span>
-            <div class="step-body">
-              <h3 class="t-h3">Guarde</h3>
-              <p>
-                Monte os cinco potes e saiba exatamente o que vai para a
-                geladeira e o que vai ao freezer.
-              </p>
-              <span class="step-when">20 minutos</span>
-            </div>
-          </li>
-          <li class="step">
-            <span class="step-num" aria-hidden="true">5</span>
-            <div class="step-body">
-              <h3 class="t-h3">Coma</h3>
-              <p>Aqueça, finalize o que precisa de toque fresco e almoce.</p>
-              <span class="step-when">8 minutos por dia</span>
-            </div>
-          </li>
-        </ol>
-      </section>
-
-      <!-- ============ PRÉVIA DO PRODUTO ============ -->
-      <section aria-labelledby="previa-t">
-        <div class="sec-head">
-          <span class="t-eyebrow"
-            ><span class="mark" aria-hidden="true"
-              ><i></i><i></i><i></i><i></i><i></i></span
-            >Por dentro do material</span
-          >
-          <h2 class="t-h2" id="previa-t">Veja como o sistema chega pronto.</h2>
-          <p class="t-body">
-            Quatro peças que se conversam - a mesma semana aparece no plano, na
-            lista, no preparo e no armazenamento.
-          </p>
-        </div>
-
-        <div class="gallery-wrap">
-          <div
-            class="gallery"
-            id="gallery"
-            tabindex="0"
-            role="group"
-            aria-label="Prévias do material - arraste para o lado"
-          >
-            <!-- 1. plano -->
-            <article class="slide">
-              <div class="slide-head">
-                <h3>Plano da semana</h3>
-                <span>Semana 3</span>
-              </div>
-              <div class="mini">
-                <div class="mini-row">
-                  <b>Seg</b><span>Frango ao limão</span>
-                </div>
-                <div class="mini-row">
-                  <b>Ter</b><span>Almôndegas + purê</span>
-                </div>
-                <div class="mini-row">
-                  <b>Qua</b><span>Strogonoff leve</span>
-                </div>
-                <div class="mini-row">
-                  <b>Qui</b><span>Peixe + cuscuz</span>
-                </div>
-                <div class="mini-row">
-                  <b>Sex</b><span>Feijoada magra</span>
-                </div>
-              </div>
-              <div class="mini-group">
-                <h4>Base comum</h4>
-                <p class="t-micro">
-                  Arroz, feijão e dois legumes assados servem as cinco
-                  refeições.
-                </p>
-              </div>
-            </article>
-
-            <!-- 2. lista -->
-            <article class="slide">
-              <div class="slide-head">
-                <h3>Lista de compras</h3>
-                <span>Por setor</span>
-              </div>
-              <div class="mini-group">
-                <h4>Hortifruti</h4>
-                <div class="mini-check on">
-                  <i aria-hidden="true"></i>Brócolis · 1 maço
-                </div>
-                <div class="mini-check on">
-                  <i aria-hidden="true"></i>Cenoura · 4 un
-                </div>
-                <div class="mini-check">
-                  <i aria-hidden="true"></i>Limão · 3 un
-                </div>
-              </div>
-              <div class="mini-group">
-                <h4>Proteínas</h4>
-                <div class="mini-check on">
-                  <i aria-hidden="true"></i>Filé de frango · 1,2 kg
-                </div>
-                <div class="mini-check">
-                  <i aria-hidden="true"></i>Carne moída · 700 g
-                </div>
-              </div>
-              <div class="mini-group">
-                <h4>Mercearia</h4>
-                <div class="mini-check">
-                  <i aria-hidden="true"></i>Arroz · 1 kg
-                </div>
-              </div>
-            </article>
-
-            <!-- 3. preparo -->
-            <article class="slide">
-              <div class="slide-head">
-                <h3>Domingo em blocos</h3>
-                <span>~2h30</span>
-              </div>
-              <div class="mini">
-                <div class="mini-block">
-                  <span class="mini-time">0:00</span
-                  ><span>Feijão na pressão + forno pré-aquecido</span>
-                </div>
-                <div class="mini-block">
-                  <span class="mini-time">0:10</span
-                  ><span>Legumes cortados e ao forno</span>
-                </div>
-                <div class="mini-block">
-                  <span class="mini-time">0:35</span
-                  ><span>Arroz da semana em panela grande</span>
-                </div>
-                <div class="mini-block">
-                  <span class="mini-time">0:55</span
-                  ><span>Frango e carne, um de cada vez</span>
-                </div>
-                <div class="mini-block">
-                  <span class="mini-time">1:50</span
-                  ><span>Esfriar antes de fechar os potes</span>
-                </div>
-                <div class="mini-block">
-                  <span class="mini-time">2:15</span
-                  ><span>Montagem e etiquetas</span>
-                </div>
-              </div>
-            </article>
-
-            <!-- 4. armazenamento -->
-            <article class="slide">
-              <div class="slide-head">
-                <h3>Mapa de armazenamento</h3>
-                <span>Validade</span>
-              </div>
-              <div class="mini">
-                <div class="mini-row">
-                  <b>Frango ao limão</b
-                  ><span><i class="store-tag fridge">Geladeira 3d</i></span>
-                </div>
-                <div class="mini-row">
-                  <b>Almôndegas</b
-                  ><span><i class="store-tag fridge">Geladeira 3d</i></span>
-                </div>
-                <div class="mini-row">
-                  <b>Strogonoff</b
-                  ><span><i class="store-tag freezer">Freezer 30d</i></span>
-                </div>
-                <div class="mini-row">
-                  <b>Feijoada</b
-                  ><span><i class="store-tag freezer">Freezer 60d</i></span>
-                </div>
-                <div class="mini-row">
-                  <b>Folhas e limão</b
-                  ><span><i class="store-tag day">No dia</i></span>
-                </div>
-              </div>
-              <div class="mini-group">
-                <h4>Regra dos potes</h4>
-                <p class="t-micro">
-                  Dois potes para os primeiros dias na geladeira, três selados
-                  no freezer.
-                </p>
-              </div>
-            </article>
-          </div>
-          <div class="dots" id="dots" aria-hidden="true">
-            <b class="on"></b><b></b><b></b><b></b>
-          </div>
-          <p class="t-micro swipe-hint">
-            Arraste para ver as quatro peças do sistema.
-          </p>
-        </div>
-
-        <!-- CTA secundário: continuar entendendo, não comprar -->
-        <div class="gallery-cta">
-          <a class="btn btn-ghost btn-block" href="#incluido"
-            >Ver tudo o que está incluído</a
-          >
-        </div>
-      </section>
-
-      <!-- ============ O QUE VOCÊ RECEBE ============ -->
-      <section class="band-surface" id="incluido" aria-labelledby="incluido-t">
-        <div class="sec-head">
-          <span class="t-eyebrow"
-            ><span class="mark" aria-hidden="true"
-              ><i></i><i></i><i></i><i></i><i></i></span
-            >O que você recebe</span
-          >
-          <h2 class="t-h2" id="incluido-t">
-            Quatro peças que resolvem a semana inteira.
-          </h2>
-        </div>
-        <ul class="deliver">
-          <li>
-            <div class="deliver-top">
-              <span class="deliver-ico" aria-hidden="true"
-                ><svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                >
-                  <rect x="3.5" y="4.5" width="17" height="16" rx="2.5" />
-                  <path
-                    d="M3.5 9.5h17M8 4.5v-2M16 4.5v-2M8 13h3M8 16.5h6"
-                  /></svg
-              ></span>
-              <h3>8 semanas planejadas</h3>
-            </div>
-            <p class="deliver-benefit">
-              <span
-                >Você não decide o almoço todos os dias - a semana já vem
-                escolhida e equilibrada.</span
-              >
-            </p>
-          </li>
-          <li>
-            <div class="deliver-top">
-              <span class="deliver-ico" aria-hidden="true"
-                ><svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                >
-                  <path
-                    d="M6.5 3.5h11a1.5 1.5 0 0 1 1.5 1.5v15l-3-2-2 1.4-2-1.4-2 1.4-2-1.4-3 2V5a1.5 1.5 0 0 1 1.5-1.5Z"
-                  />
-                  <path d="M9 8h6M9 12h6" /></svg
-              ></span>
-              <h3>Listas de compras por semana</h3>
-            </div>
-            <p class="deliver-benefit">
-              <span
-                >Organizadas por setor do mercado, com quantidades certas para
-                cinco almoços.</span
-              >
-            </p>
-          </li>
-          <li>
-            <div class="deliver-top">
-              <span class="deliver-ico" aria-hidden="true"
-                ><svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                >
-                  <circle cx="12" cy="12" r="8.5" />
-                  <path d="M12 7v5l3.5 2" /></svg
-              ></span>
-              <h3>Sequência de preparo de domingo</h3>
-            </div>
-            <p class="deliver-benefit">
-              <span
-                >O que entra no fogo primeiro, o que cozinha sozinho e o que
-                você corta nesse meio-tempo.</span
-              >
-            </p>
-          </li>
-          <li>
-            <div class="deliver-top">
-              <span class="deliver-ico" aria-hidden="true"
-                ><svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                >
-                  <path
-                    d="M5 8.5h14l-1 10.5a2 2 0 0 1-2 1.8H8a2 2 0 0 1-2-1.8L5 8.5Z"
-                  />
-                  <path
-                    d="M8.5 8.5V6a3.5 3.5 0 0 1 7 0v2.5M9.5 12.5v4M14.5 12.5v4"
-                  /></svg
-              ></span>
-              <h3>Sistema de armazenamento</h3>
-            </div>
-            <p class="deliver-benefit">
-              <span
-                >O que vai à geladeira, o que congela bem, quanto tempo dura e o
-                que finalizar no dia.</span
-              >
-            </p>
-          </li>
-        </ul>
-
-        <div class="extras">
-          <span class="t-eyebrow"
-            ><span class="mark" aria-hidden="true"
-              ><i></i><i></i><i></i><i></i><i></i></span
-            >Material de apoio incluído</span
-          >
-          <ul>
-            <li>
-              <span
-                ><b>Guia de substituições</b> - troque proteína ou legume sem
-                quebrar o plano.</span
-              >
+          <ul class="receber-list">
+            <li class="receber-item">
+              <span class="receber-icon" aria-hidden="true">
+                <svg><use href="#i-calendar" /></svg>
+              </span>
+              <p>Guia para 2 meses de marmitas sem repetições.</p>
             </li>
-            <li>
-              <span
-                ><b>Equipamento mínimo</b> - o que realmente é necessário e o
-                que é opcional.</span
-              >
+            <li class="receber-item">
+              <span class="receber-icon" aria-hidden="true">
+                <svg><use href="#i-list" /></svg>
+              </span>
+              <p>Lista de compras detalhada e com quantidade para cada semana.</p>
             </li>
-            <li>
-              <span
-                ><b>Tabela de validade</b> - geladeira, freezer e reaquecimento
-                por tipo de preparo.</span
-              >
+            <li class="receber-item">
+              <span class="receber-icon" aria-hidden="true">
+                <svg><use href="#i-fridge" /></svg>
+              </span>
+              <p>
+                Indicação individual do qual marmita vai a geladeira e qual vai
+                para o freezer
+              </p>
             </li>
           </ul>
-        </div>
-      </section>
 
-      <!-- ============ NÚMEROS ============ -->
-      <section class="band-forest" aria-labelledby="numeros-t">
-        <div class="sec-head">
-          <span class="t-eyebrow"
-            ><span class="mark" aria-hidden="true"
-              ><i></i><i></i><i></i><i></i><i></i></span
-            >O que está dentro, em números</span
+          <img
+            class="band-photo"
+            src="assets/images/o-que-voce-recebe.webp"
+            width="390"
+            height="260"
+            alt="Potes de marmita montados e organizados sobre a bancada."
+            loading="lazy"
+            decoding="async"
+          />
+        </section>
+
+        <!-- ============ DESCONTO ============ -->
+        <section class="desconto" id="desconto" aria-labelledby="desconto-t">
+          <div class="sec-head">
+            <h2 class="t-h2" id="desconto-t">
+              Adquira já seu guia com desconto especial
+            </h2>
+          </div>
+
+          <div class="price-block">
+            <p class="price-label">De</p>
+            <p class="price-line">
+              <span class="price-cur">R$</span>
+              <s class="price-old">69,90</s>
+            </p>
+          </div>
+
+          <div class="price-block">
+            <p class="price-label">Por</p>
+            <p class="price-line">
+              <span class="price-cur">R$</span>
+              <strong class="price-new">37,90</strong>
+            </p>
+          </div>
+
+          <a
+            class="btn btn-primary"
+            href="https://pay.hotmart.com/X107571787Q"
+            data-checkout
           >
-          <h2 class="t-h2" id="numeros-t">
-            Um sistema fechado, não uma pasta de receitas.
-          </h2>
-        </div>
-        <div class="numbers">
-          <div class="number">
-            <b>8</b><span>semanas completas</span
-            ><small>rotação sem repetir</small>
-          </div>
-          <div class="number">
-            <b>40</b><span>almoços planejados</span><small>5 por semana</small>
-          </div>
-          <div class="number">
-            <b>5</b><span>potes por sessão</span
-            ><small>montados de uma vez</small>
-          </div>
-          <div class="number">
-            <b>1</b><span>preparo por semana</span><small>cerca de 2h30</small>
-          </div>
-        </div>
-      </section>
+            Adquirir Com Desconto
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </section>
 
-      <!-- ============ PROVA SOCIAL ============ -->
-      <!-- ⚠️ SUBSTITUIR pelos depoimentos reais de clientes antes de publicar. -->
-      <section aria-labelledby="prova-t">
-        <div class="sec-head">
-          <span class="t-eyebrow"
-            ><span class="mark" aria-hidden="true"
-              ><i></i><i></i><i></i><i></i><i></i></span
-            >Quem já usa</span
+        <!-- ============ COMO FUNCIONA ============ -->
+        <section class="passos" aria-labelledby="passos-t">
+          <div class="sec-head">
+            <h2 class="t-h2" id="passos-t">
+              São 5 passos, sempre na<br />mesma ordem.
+            </h2>
+          </div>
+
+          <div class="passos-wrap">
+            <div
+              class="passos-track"
+              role="group"
+              aria-label="Os cinco passos, em ordem"
+              tabindex="0"
+            >
+              <article class="passo">
+                <h3 class="passo-title">1 - Planeje</h3>
+                <p class="passo-text">
+                  Abra a semana do plano e veja os cinco almoços já definidos.
+                </p>
+                <img
+                  src="assets/images/passo-1-planeje.webp"
+                  width="281"
+                  height="227"
+                  alt="Plano semanal aberto com os cinco almoços definidos."
+                  loading="lazy"
+                  decoding="async"
+                />
+              </article>
+
+              <article class="passo">
+                <h3 class="passo-title">2 - Compre</h3>
+                <p class="passo-text">
+                  Leve a lista da semana, organizada por setor do mercado.
+                </p>
+                <img
+                  src="assets/images/passo-2-compre.webp"
+                  width="280"
+                  height="227"
+                  alt="Lista de compras organizada por setor do mercado."
+                  loading="lazy"
+                  decoding="async"
+                />
+              </article>
+
+              <article class="passo">
+                <h3 class="passo-title">3 - Prepare</h3>
+                <p class="passo-text">
+                  Passo a passo para que o preparo aconteça dentro das horas
+                  planejadas.
+                </p>
+                <img
+                  src="assets/images/passo-3-prepare.webp"
+                  width="280"
+                  height="227"
+                  alt="Preparo dos alimentos seguindo a sequência do guia."
+                  loading="lazy"
+                  decoding="async"
+                />
+              </article>
+
+              <article class="passo">
+                <h3 class="passo-title">4 - Guarde</h3>
+                <p class="passo-text">
+                  Monte sabendo o que vai para a geladeira e o que vai ao
+                  freezer.
+                </p>
+                <img
+                  src="assets/images/passo-4-guarde.webp"
+                  width="252"
+                  height="227"
+                  alt="Potes fechados e etiquetados para geladeira e freezer."
+                  loading="lazy"
+                  decoding="async"
+                />
+              </article>
+
+              <article class="passo">
+                <h3 class="passo-title">5 - Coma</h3>
+                <p class="passo-text">
+                  Aqueça, finalize o que precisa de toque fresco e almoce.
+                </p>
+                <img
+                  src="assets/images/passo-5-coma.webp"
+                  width="279"
+                  height="227"
+                  alt="Marmita aquecida e servida na hora do almoço."
+                  loading="lazy"
+                  decoding="async"
+                />
+              </article>
+            </div>
+
+            <div class="dots" id="dots" aria-hidden="true">
+              <b class="on"></b><b></b><b></b><b></b><b></b>
+            </div>
+            <p class="swipe-hint">Arraste para ver os cinco passos.</p>
+          </div>
+
+          <!-- CTA secundário: continuar entendendo, não comprar -->
+          <a class="btn btn-ghost" href="#oferta"
+            >Ver tudo o que está incluído</a
           >
-          <h2 class="t-h2" id="prova-t">O que muda na prática.</h2>
-        </div>
+        </section>
 
-        <figure class="quote-hero">
-          <span class="quote-mark" aria-hidden="true">“</span>
-          <blockquote>
-            Eu cozinhava quase todo dia e ainda pedia comida duas vezes por
-            semana. Agora é domingo à tarde e pronto. A parte que mais me ajudou
-            foi saber o que congela e o que não.
-          </blockquote>
-          <figcaption class="quote-who">
-            <span class="avatar" aria-hidden="true">MR</span>
-            <p>Mariana R.<small>Semana 6 do plano</small></p>
-          </figcaption>
-        </figure>
-
-        <div class="quote-row" role="group" aria-label="Mais depoimentos">
-          <figure class="quote-sm">
-            <p>
-              A lista por setor foi o que me pegou. Entro no mercado e saio em
-              vinte minutos, sem comprar o que não vou usar.
-            </p>
-            <figcaption class="quote-who">
-              <span class="avatar" aria-hidden="true">TL</span>
-              <p>Thiago L.<small>Semana 3</small></p>
-            </figcaption>
-          </figure>
-          <figure class="quote-sm">
-            <p>
-              Cozinho mal, sério. Mas a sequência de domingo é só seguir a
-              ordem. Na terceira semana já não olhava mais o passo a passo.
-            </p>
-            <figcaption class="quote-who">
-              <span class="avatar" aria-hidden="true">CB</span>
-              <p>Camila B.<small>Semana 4</small></p>
-            </figcaption>
-          </figure>
-          <figure class="quote-sm">
-            <p>
-              Moro sozinho e sempre sobrava comida. Cinco potes é exatamente a
-              conta da minha semana.
-            </p>
-            <figcaption class="quote-who">
-              <span class="avatar" aria-hidden="true">RA</span>
-              <p>Rafael A.<small>Semana 8</small></p>
-            </figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <!-- ============ OBJEÇÕES ============ -->
-      <section class="band-surface" aria-labelledby="obj-t">
-        <div class="sec-head">
-          <span class="t-eyebrow"
-            ><span class="mark" aria-hidden="true"
-              ><i></i><i></i><i></i><i></i><i></i></span
-            >Antes de decidir</span
-          >
-          <h2 class="t-h2" id="obj-t">
-            As dúvidas que provavelmente você tem.
-          </h2>
-          <p class="t-body">Respostas diretas, sem letra miúda.</p>
-        </div>
-        <div class="objections">
-          <div class="objection">
-            <h3><span>Eu não tenho tempo pra isso.</span></h3>
-            <p>
-              O sistema existe justamente para gastar menos tempo: uma sessão de
-              cerca de 2h30 substitui quatro ou cinco preparos corridos durante
-              a semana.
-            </p>
-          </div>
-          <div class="objection">
-            <h3><span>Não sei cozinhar muito bem.</span></h3>
-            <p>
-              Nenhuma técnica avançada. São preparos de panela, forno e fogão
-              comuns, na ordem certa - a ordem é o que faz parecer difícil
-              quando falta.
-            </p>
-          </div>
-          <div class="objection">
-            <h3><span>Não tenho todos os equipamentos.</span></h3>
-            <p>
-              O básico resolve: uma panela grande, uma frigideira, uma assadeira
-              e potes. A panela de pressão acelera, mas há alternativa sem ela
-              em todas as semanas.
-            </p>
-          </div>
-          <div class="objection">
-            <h3><span>Meu freezer é pequeno.</span></h3>
-            <p>
-              O plano usa dois potes na geladeira e três no freezer. O guia
-              mostra como empilhar em porções planas e como adaptar se o espaço
-              for menor ainda.
-            </p>
-          </div>
-          <div class="objection">
-            <h3><span>Não gosto de alguns ingredientes.</span></h3>
-            <p>
-              O guia de substituições traz trocas equivalentes de proteína,
-              carboidrato e legume, mantendo tempo de preparo e validade.
-            </p>
-          </div>
-          <div class="objection">
-            <h3><span>Será que eu consigo manter?</span></h3>
-            <p>
-              São 8 semanas em rotação, não um desafio com data. Se uma semana
-              sair do trilho, você recomeça na seguinte sem perder nada.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============ OFERTA ============ -->
-      <section class="offer" id="oferta" aria-labelledby="oferta-t">
-        <div class="sec-head">
-          <span class="t-eyebrow"
-            ><span class="mark" aria-hidden="true"
-              ><i></i><i></i><i></i><i></i><i></i></span
-            >A oferta</span
-          >
-          <h2 class="t-h2" id="oferta-t">
-            Tudo o que você precisa para nunca mais improvisar o almoço.
-          </h2>
-        </div>
-
-        <div class="offer-card">
-          <div class="offer-top">
-            <p class="offer-name">
-              <span class="mark" aria-hidden="true"
-                ><i></i><i></i><i></i><i></i><i></i
-              ></span>
-              Cinco Potes - <br />Sistema completo
-            </p>
-            <p class="offer-sub">
-              Material digital · acesso imediato · seu para sempre
-            </p>
-            <ul class="offer-list">
+        <!-- ============ MATERIAL DE APOIO ============ -->
+        <section class="apoio" aria-labelledby="apoio-t">
+          <div class="apoio-card">
+            <p class="t-eyebrow" id="apoio-t">Material de apoio incluído</p>
+            <ul class="apoio-list">
               <li>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.2"
-                  aria-hidden="true"
-                >
-                  <path d="M4 12.5 9.5 18 20 6.5" /></svg
-                ><span>8 semanas planejadas · 40 almoços</span>
+                <span class="apoio-plus" aria-hidden="true">+</span>
+                <p><b>Guia de substituições</b> - troque proteína ou legume sem quebrar o plano.</p>
               </li>
               <li>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.2"
-                  aria-hidden="true"
-                >
-                  <path d="M4 12.5 9.5 18 20 6.5" /></svg
-                ><span>8 listas de compras por setor</span>
+                <span class="apoio-plus" aria-hidden="true">+</span>
+                <p><b>Equipamento mínimo</b> - o que realmente é necessário e o que é opcional.</p>
               </li>
               <li>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.2"
-                  aria-hidden="true"
-                >
-                  <path d="M4 12.5 9.5 18 20 6.5" /></svg
-                ><span>Sequência de preparo de domingo</span>
-              </li>
-              <li>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.2"
-                  aria-hidden="true"
-                >
-                  <path d="M4 12.5 9.5 18 20 6.5" /></svg
-                ><span>Mapa de armazenamento e validade</span>
-              </li>
-              <li>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.2"
-                  aria-hidden="true"
-                >
-                  <path d="M4 12.5 9.5 18 20 6.5" /></svg
-                ><span>Guia de substituições e equipamento mínimo</span>
+                <span class="apoio-plus" aria-hidden="true">+</span>
+                <p><b>Tabela de validade</b> - geladeira, freezer e reaquecimento por tipo de preparo.</p>
               </li>
             </ul>
           </div>
+        </section>
 
-          <div class="offer-price">
-            <p class="price-context">
-              São 40 almoços organizados. Menos do <br />que você gasta em
-              <b>um</b> pedido de delivery.
-            </p>
-            <p class="price-row">
-              <span class="price-cur">R$</span>
-              <span class="price-val">29,90</span>
-            </p>
-            <p class="price-terms">
-              Pagamento único <b>no Pix</b> <br />ou em até
-              <b>9× de R$ 3,93</b> no cartão.
-            </p>
+        <!-- ============ NÚMEROS ============ -->
+        <section class="band-forest numeros" aria-labelledby="numeros-t">
+          <div class="sec-head">
+            <h2 class="t-h2" id="numeros-t">Acesso vitalício</h2>
+          </div>
 
-            <div class="offer-cta">
-              <a
-                class="btn btn-primary btn-block"
-                href="https://pay.hotmart.com/X107571787Q"
-                data-checkout
-              >
-                Começar minha primeira semana
-                <span class="arrow" aria-hidden="true">→</span>
-              </a>
-              <p class="cta-note">Garantia de 7 dias · devolução integral</p>
+          <ul class="numeros-grid">
+            <li class="numero">
+              <b>8</b>
+              <span>semanas completas</span>
+              <small>rotação sem repetir</small>
+            </li>
+            <li class="numero">
+              <b>40</b>
+              <span>almoços planejados</span>
+              <small>5 por semana</small>
+            </li>
+            <li class="numero">
+              <b>5</b>
+              <span>potes por sessão</span>
+              <small>montados de uma vez</small>
+            </li>
+            <li class="numero">
+              <b>1</b>
+              <span>preparo por semana</span>
+              <small>cerca de 2h30</small>
+            </li>
+          </ul>
+
+          <img
+            class="band-photo"
+            src="assets/images/acesso-vitalicio.webp"
+            width="390"
+            height="260"
+            alt="Cinco potes prontos, empilhados na geladeira."
+            loading="lazy"
+            decoding="async"
+          />
+        </section>
+
+        <!-- ============ DEPOIMENTO ============ -->
+        <!-- SUBSTITUIR pelos depoimentos reais de clientes antes de publicar -->
+        <section class="depoimento" aria-labelledby="depo-t">
+          <div class="sec-head">
+            <h2 class="t-h2" id="depo-t">O que muda na prática.</h2>
+          </div>
+
+          <figure class="quote">
+            <span class="quote-mark" aria-hidden="true">“</span>
+            <blockquote>
+              Eu cozinhava quase todo dia e ainda pedia comida duas vezes por
+              semana. Agora é domingo à tarde e pronto. A parte que mais me
+              ajudou foi saber o que congela e o que não.
+            </blockquote>
+            <figcaption>
+              <span class="quote-avatar" aria-hidden="true">MR</span>
+              <span class="quote-who">
+                <b>Mariana R.</b>
+                <small>Semana 6 do plano</small>
+              </span>
+            </figcaption>
+          </figure>
+        </section>
+
+        <!-- ============ OFERTA ============ -->
+        <section class="oferta" id="oferta" aria-labelledby="oferta-t">
+          <div class="offer-card">
+            <div class="offer-head">
+              <h2 class="offer-title" id="oferta-t">Sistema completo</h2>
+              <p class="offer-sub">
+                Material digital · Acesso imediato · Seu para sempre · Itens
+                baratos e saudáveis
+              </p>
             </div>
 
-            <div class="pay-row">
-              <span
-                ><svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.9"
-                  aria-hidden="true"
+            <div class="offer-body">
+              <p class="offer-kicker">Chega de gastar com Fast Food</p>
+
+              <p class="price-line">
+                <span class="price-cur">R$</span>
+                <s class="price-old price-old-sm">69,90</s>
+              </p>
+              <p class="price-line">
+                <span class="price-cur">R$</span>
+                <strong class="price-new">37,90</strong>
+              </p>
+
+              <p class="offer-terms">
+                Pagamento único <b>no Pix</b><br />ou em até
+                <b>12× de R$ 3,92</b> no cartão.
+              </p>
+
+              <div class="offer-cta">
+                <a
+                  class="btn btn-primary"
+                  href="https://pay.hotmart.com/X107571787Q"
+                  data-checkout
                 >
-                  <rect x="4" y="10.5" width="16" height="10" rx="2" />
-                  <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" /></svg
-                >Pagamento seguro</span
-              >
-              <span
-                ><svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.9"
-                  aria-hidden="true"
-                >
-                  <path d="M12 3.5v11M8 11l4 4 4-4" />
-                  <path
-                    d="M4.5 17.5v1.5a1.5 1.5 0 0 0 1.5 1.5h12a1.5 1.5 0 0 0 1.5-1.5v-1.5"
-                  /></svg
-                >Acesso digital imediato</span
-              >
+                  ADQUIRIR MEU GUIA AGORA
+                  <span class="arrow" aria-hidden="true">→</span>
+                </a>
+                <p class="cta-note">Garantia de 7 dias · devolução integral</p>
+              </div>
+
+              <ul class="offer-trust">
+                <li>
+                  <svg class="trust-icon" aria-hidden="true">
+                    <use href="#i-lock" />
+                  </svg>
+                  <span>Pagamento<br />seguro</span>
+                </li>
+                <li>
+                  <svg class="trust-icon" aria-hidden="true">
+                    <use href="#i-bolt" />
+                  </svg>
+                  <span>Acesso digital<br />imediato</span>
+                </li>
+              </ul>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <!-- ============ GARANTIA ============ -->
-      <section class="band-forest" aria-labelledby="garantia-t">
-        <div class="guarantee">
-          <span class="guarantee-ico" aria-hidden="true"
-            ><svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.9"
-            >
-              <path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6l7-3Z" />
-              <path d="M8.8 12.2l2.2 2.2 4.2-4.4" /></svg
-          ></span>
-          <div>
-            <h2 class="t-h2" id="garantia-t">7 dias para testar sem risco.</h2>
-            <p>
-              Compre, abra o material e faça a primeira semana. Se não servir
-              para a sua rotina, escreva para o suporte dentro de 7 dias e
-              devolvemos o valor integral - sem formulário, sem justificativa.
-            </p>
+        <!-- ============ GARANTIA ============ -->
+        <section class="band-forest garantia" aria-labelledby="garantia-t">
+          <div class="garantia-row">
+            <span class="garantia-icon" aria-hidden="true">
+              <svg><use href="#i-shield" /></svg>
+            </span>
+            <div class="garantia-text">
+              <h2 id="garantia-t">7 dias para testar sem risco.</h2>
+              <p>
+                Compre, abra o material e faça a primeira semana. Se não servir
+                para a sua rotina, escreva para o suporte dentro de 7 dias e
+                devolvemos o valor integral - sem formulário, sem justificativa.
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <!-- ============ FAQ ============ -->
-      <section aria-labelledby="faq-t">
-        <div class="sec-head">
-          <span class="t-eyebrow"
-            ><span class="mark" aria-hidden="true"
-              ><i></i><i></i><i></i><i></i><i></i></span
-            >Perguntas frequentes</span
-          >
-          <h2 class="t-h2" id="faq-t">O que costuma ficar em dúvida.</h2>
-        </div>
-        <div class="faq">
-          <details>
-            <summary>
-              Para quem é o Cinco Potes?<span class="caret" aria-hidden="true"
-                ><svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.4"
-                >
-                  <path d="M5 9l7 7 7-7" /></svg
-              ></span>
-            </summary>
-            <p class="faq-answer">
-              Para quem almoça em casa ou leva marmita e quer parar de decidir o
-              almoço todos os dias. Funciona para uma pessoa e tem orientação
-              para dobrar as quantidades.
-            </p>
-          </details>
-          <details>
-            <summary>
-              Preciso cozinhar tudo no domingo?<span
-                class="caret"
-                aria-hidden="true"
-                ><svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.4"
-                >
-                  <path d="M5 9l7 7 7-7" /></svg
-              ></span>
-            </summary>
-            <p class="faq-answer">
-              Não. Domingo é a sugestão, mas a sequência funciona em qualquer
-              dia. Há também a variação em dois blocos menores, se preferir
-              dividir o preparo.
-            </p>
-          </details>
-          <details>
-            <summary>
-              Preciso de panela de pressão?<span
-                class="caret"
-                aria-hidden="true"
-                ><svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.4"
-                >
-                  <path d="M5 9l7 7 7-7" /></svg
-              ></span>
-            </summary>
-            <p class="faq-answer">
-              Ajuda, mas não é obrigatória. Todas as semanas têm alternativa em
-              panela comum, com o tempo ajustado.
-            </p>
-          </details>
-          <details>
-            <summary>
-              Quanto tempo leva o preparo?<span class="caret" aria-hidden="true"
-                ><svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.4"
-                >
-                  <path d="M5 9l7 7 7-7" /></svg
-              ></span>
-            </summary>
-            <p class="faq-answer">
-              Cerca de 2h30, contando o tempo em que a comida cozinha sozinha. A
-              montagem dos potes leva mais uns 20 minutos.
-            </p>
-          </details>
-          <details>
-            <summary>
-              Posso substituir ingredientes?<span
-                class="caret"
-                aria-hidden="true"
-                ><svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.4"
-                >
-                  <path d="M5 9l7 7 7-7" /></svg
-              ></span>
-            </summary>
-            <p class="faq-answer">
-              Sim. O guia de substituições lista trocas equivalentes de
-              proteína, carboidrato e legume sem alterar o tempo de preparo nem
-              a validade.
-            </p>
-          </details>
-          <details>
-            <summary>
-              Como funciona o armazenamento?<span
-                class="caret"
-                aria-hidden="true"
-                ><svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.4"
-                >
-                  <path d="M5 9l7 7 7-7" /></svg
-              ></span>
-            </summary>
-            <p class="faq-answer">
-              Cada preparo vem marcado como geladeira, freezer ou finalizar no
-              dia, com prazo em dias e instrução de reaquecimento.
-            </p>
-          </details>
-          <details>
-            <summary>
-              O material é digital? Como recebo?<span
-                class="caret"
-                aria-hidden="true"
-                ><svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.4"
-                >
-                  <path d="M5 9l7 7 7-7" /></svg
-              ></span>
-            </summary>
-            <p class="faq-answer">
-              Sim, é 100% digital. Assim que o pagamento é confirmado você
-              recebe o acesso por e-mail e pode usar no celular, tablet ou
-              impresso.
-            </p>
-          </details>
-          <details>
-            <summary>
-              E se eu não gostar?<span class="caret" aria-hidden="true"
-                ><svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.4"
-                >
-                  <path d="M5 9l7 7 7-7" /></svg
-              ></span>
-            </summary>
-            <p class="faq-answer">
-              Você tem 7 dias para pedir a devolução integral pelo suporte. Sem
-              justificativa e sem burocracia.
-            </p>
-          </details>
-        </div>
-      </section>
+        <!-- ============ FAQ ============ -->
+        <section class="faq-sec" aria-labelledby="faq-t">
+          <div class="sec-head">
+            <h2 class="t-h2" id="faq-t">O que costuma ficar em<br />dúvida.</h2>
+          </div>
 
-      <!-- ============ FECHAMENTO ============ -->
-      <section class="band-forest closing" aria-labelledby="fim-t">
-        <h2 id="fim-t">
-          Você não precisa decidir o almoço todos os dias.<br /><span
-            class="soft"
-            >Você precisa de um sistema que já decidiu.</span
+          <div class="faq">
+            <details>
+              <summary>
+                Para quem é o Cinco Potes?
+                <span class="caret" aria-hidden="true">
+                  <svg><use href="#i-chevron" /></svg>
+                </span>
+              </summary>
+              <p class="faq-answer">
+                Para quem almoça em casa ou leva marmita e quer parar de decidir
+                o almoço todos os dias. Funciona para uma pessoa e tem
+                orientação para dobrar as quantidades.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                Preciso cozinhar tudo no domingo?
+                <span class="caret" aria-hidden="true">
+                  <svg><use href="#i-chevron" /></svg>
+                </span>
+              </summary>
+              <p class="faq-answer">
+                Não. Domingo é a sugestão, mas a sequência funciona em qualquer
+                dia. Há também a variação em dois blocos menores, se preferir
+                dividir o preparo.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                Preciso de panela de pressão?
+                <span class="caret" aria-hidden="true">
+                  <svg><use href="#i-chevron" /></svg>
+                </span>
+              </summary>
+              <p class="faq-answer">
+                Ajuda, mas não é obrigatória. Todas as semanas têm alternativa
+                em panela comum, com o tempo ajustado.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                Quanto tempo leva o preparo?
+                <span class="caret" aria-hidden="true">
+                  <svg><use href="#i-chevron" /></svg>
+                </span>
+              </summary>
+              <p class="faq-answer">
+                Cerca de 2h30, contando o tempo em que a comida cozinha sozinha.
+                A montagem dos potes leva mais uns 20 minutos.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                Posso substituir ingredientes?
+                <span class="caret" aria-hidden="true">
+                  <svg><use href="#i-chevron" /></svg>
+                </span>
+              </summary>
+              <p class="faq-answer">
+                Sim. O guia de substituições lista trocas equivalentes de
+                proteína, carboidrato e legume sem alterar o tempo de preparo
+                nem a validade.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                Como funciona o armazenamento?
+                <span class="caret" aria-hidden="true">
+                  <svg><use href="#i-chevron" /></svg>
+                </span>
+              </summary>
+              <p class="faq-answer">
+                Cada preparo vem marcado como geladeira, freezer ou finalizar no
+                dia, com prazo em dias e instrução de reaquecimento.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                O material é digital? Como recebo?
+                <span class="caret" aria-hidden="true">
+                  <svg><use href="#i-chevron" /></svg>
+                </span>
+              </summary>
+              <p class="faq-answer">
+                Sim, é 100% digital. Assim que o pagamento é confirmado você
+                recebe o acesso por e-mail e pode usar no celular, tablet ou
+                impresso.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                E se eu não gostar?
+                <span class="caret" aria-hidden="true">
+                  <svg><use href="#i-chevron" /></svg>
+                </span>
+              </summary>
+              <p class="faq-answer">
+                Você tem 7 dias para pedir a devolução integral pelo suporte.
+                Sem justificativa e sem burocracia.
+              </p>
+            </details>
+          </div>
+        </section>
+
+        <!-- ============ FECHAMENTO ============ -->
+        <section class="fechamento">
+          <a
+            class="btn btn-primary"
+            href="https://pay.hotmart.com/X107571787Q"
+            data-checkout
           >
-        </h2>
-        <p>
-          A próxima semana vai começar de um jeito ou de outro. A diferença é
-          abrir a geladeira e encontrar cinco potes prontos - ou o cardápio do
-          delivery outra vez.
-        </p>
-        <a
-          class="btn btn-primary btn-block"
-          href="https://pay.hotmart.com/X107571787Q"
-          data-checkout
-        >
-          Organizar minha próxima semana
-          <span class="arrow" aria-hidden="true">→</span>
-        </a>
-        <p class="cta-note">R$ 29,90 · pagamento único · garantia de 7 dias</p>
-      </section>
+            Quero montar minhas marmitas
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </section>
+      </main>
 
       <!-- ============ FOOTER ============ -->
       <footer class="site-footer">
-        <a class="brand" href="#top">
+        <a class="brand" href="#top" aria-label="Cinco Potes - início">
           <span class="brand-mark" aria-hidden="true"
             ><i></i><i></i><i></i><i></i><i></i
           ></span>
@@ -1292,7 +696,7 @@
         >
           <span class="sticky-buy-label">ADQUIRIR DESCONTO</span>
           <span class="sticky-buy-price">
-            <s>R$ 47,90</s> <b>R$ 29,90</b>
+            <s>R$ 69,90</s> <b>R$ 37,90</b>
           </span>
         </a>
       </div>
