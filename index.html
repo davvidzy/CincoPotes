@@ -16,7 +16,11 @@
       href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/style.css" />
+    <!-- O servidor manda CSS/JS ficarem 7 dias em cache (max-age=604800).
+         Sem o ?v= abaixo, quem já visitou o site continua com os arquivos
+         antigos e vê a página sem estilo. Suba o número a cada deploy que
+         mexer em css/style.css ou js/main.js. -->
+    <link rel="stylesheet" href="css/style.css?v=2" />
     <!-- Liga o reveal ao scroll antes do primeiro paint (evita piscada).
          Não entra se o usuário pede menos movimento, e um timeout de
          segurança libera o conteúdo caso main.js não carregue. -->
@@ -38,7 +42,7 @@
         }, 2500);
       })();
     </script>
-    <script src="js/main.js" defer></script>
+    <script src="js/main.js?v=2" defer></script>
 
     <!-- Meta Pixel Code -->
     <script>
