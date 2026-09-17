@@ -20,7 +20,7 @@
          Sem o ?v= abaixo, quem já visitou o site continua com os arquivos
          antigos e vê a página sem estilo. Suba o número a cada deploy que
          mexer em css/style.css ou js/main.js. -->
-    <link rel="stylesheet" href="css/style.css?v=6" />
+    <link rel="stylesheet" href="css/style.css?v=10" />
     <!-- Liga o reveal ao scroll antes do primeiro paint (evita piscada).
          Não entra se o usuário pede menos movimento, e um timeout de
          segurança libera o conteúdo caso main.js não carregue. -->
@@ -42,7 +42,7 @@
         }, 2500);
       })();
     </script>
-    <script src="js/main.js?v=6" defer></script>
+    <script src="js/main.js?v=10" defer></script>
 
     <!-- Meta Pixel Code -->
     <script>
@@ -154,6 +154,9 @@
       <symbol id="i-chevron" viewBox="0 0 24 24">
         <path d="M5 9l7 7 7-7" />
       </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <path d="M4.5 12.5l5 5 10-11" />
+      </symbol>
       <symbol id="i-zoom" viewBox="0 0 24 24">
         <circle cx="10.5" cy="10.5" r="6.5" />
         <path d="M15.5 15.5L21 21M8 10.5h5M10.5 8v5" />
@@ -176,12 +179,7 @@
           ></span>
           <span class="brand-name">Cinco Potes</span>
         </a>
-        <a
-          class="btn-head"
-          href="https://pay.hotmart.com/X107571787Q?checkoutMode=10"
-          data-checkout
-          >COMPRAR</a
-        >
+        <a class="btn-head" href="#oferta">COMPRAR</a>
       </header>
 
       <main>
@@ -193,11 +191,7 @@
           </p>
 
           <div class="hero-cta">
-            <a
-              class="btn btn-primary"
-              href="https://pay.hotmart.com/X107571787Q?checkoutMode=10"
-              data-checkout
-            >
+            <a class="btn btn-primary" href="#oferta">
               QUERO MEU PLANEJAMENTO
               <span class="arrow" aria-hidden="true">→</span>
             </a>
@@ -255,8 +249,16 @@
         <!-- ============ DESCONTO ============ -->
         <section class="desconto" id="desconto" aria-labelledby="desconto-t">
           <div class="sec-head">
-            <h2 class="t-h2" id="desconto-t">
-              Adquira já seu guia com desconto especial
+            <!-- Mesmo texto, quebrado em três níveis para o número virar o
+                 foco. O valor de #vagasRestantes é controlado pelo contador
+                 em js/main.js; o 23 do markup é o estado inicial e o que
+                 aparece se o JS não rodar. -->
+            <h2 class="t-h2 desconto-titulo" id="desconto-t">
+              <span class="desconto-cima">Desconto para os próximos</span>
+              <span class="desconto-vagas">
+                <span class="vagas-num" id="vagasRestantes">23</span>
+              </span>
+              <span class="desconto-baixo">clientes sobre o plano completo</span>
             </h2>
           </div>
 
@@ -276,13 +278,18 @@
             </p>
           </div>
 
-          <a
-            class="btn btn-primary"
-            href="https://pay.hotmart.com/X107571787Q?checkoutMode=10"
-            data-checkout
-          >
+          <a class="btn btn-primary" href="#oferta">
             COMPRAR COM DESCONTO
             <span class="arrow" aria-hidden="true">→</span>
+          </a>
+
+          <!-- alternativa discreta: mesma família visual, peso bem menor,
+               para não competir com o desconto do Completo acima -->
+          <p class="alt-ou"><span>ou</span></p>
+
+          <a class="alt-plano" href="#oferta">
+            <span class="alt-plano-label">Leve no Plano Básico</span>
+            <span class="alt-plano-price">R$ 9,90</span>
           </a>
         </section>
 
@@ -518,60 +525,172 @@
           </div>
         </section>
 
-        <!-- ============ OFERTA ============ -->
+        <!-- ============ OFERTA / PLANOS ============
+             Dois planos empilhados (a coluna é sempre 390px). O Completo vem
+             primeiro e carrega todo o peso visual: selo, borda terracota,
+             sombra e CTA sólido. O Básico é deliberadamente mais discreto -
+             borda simples, sem sombra, CTA vazado - para funcionar como porta
+             de entrada sem competir com o Completo.
+             ============================================================ -->
         <section class="oferta" id="oferta" aria-labelledby="oferta-t">
-          <div class="offer-card">
-            <div class="offer-head">
-              <h2 class="offer-title" id="oferta-t">Sistema completo</h2>
-              <p class="offer-sub">
-                Material digital · Acesso imediato · Seu para sempre · Itens
-                baratos e saudáveis
-              </p>
-            </div>
+          <div class="sec-head">
+            <h2 class="t-h2" id="oferta-t">Escolha o seu plano</h2>
+            <p class="planos-sub">
+              Os dois seguem o mesmo método. A diferença é o tamanho.
+            </p>
+          </div>
 
-            <div class="offer-body">
-              <p class="offer-kicker">Chega de gastar com Fast Food</p>
+          <div class="planos">
+            <!-- ---------- COMPLETO (destaque) ---------- -->
+            <div class="offer-card plano plano-hero">
+              <p class="plano-badge">Mais vendido</p>
 
-              <p class="price-line">
-                <span class="price-cur">R$</span>
-                <s class="price-old price-old-sm">69,90</s>
-              </p>
-              <p class="price-line">
-                <span class="price-cur">R$</span>
-                <strong class="price-new">37,90</strong>
-              </p>
-
-              <p class="offer-terms">
-                Pagamento único <b>no Pix</b><br />ou em até
-                <b>12× de R$ 3,92</b> no cartão.
-              </p>
-
-              <div class="offer-cta">
-                <a
-                  class="btn btn-primary"
-                  href="https://pay.hotmart.com/X107571787Q?checkoutMode=10"
-                  data-checkout
-                >
-                  ADQUIRIR MEU GUIA AGORA
-                  <span class="arrow" aria-hidden="true">→</span>
-                </a>
-                <p class="cta-note">Garantia de 7 dias · devolução integral</p>
+              <div class="offer-head">
+                <h3 class="offer-title">Completo</h3>
+                <p class="offer-sub">
+                  8 semanas · 40 almoços · 8 listas de compras
+                </p>
               </div>
 
-              <ul class="offer-trust">
-                <li>
-                  <svg class="trust-icon" aria-hidden="true">
-                    <use href="#i-lock" />
-                  </svg>
-                  <span>Pagamento<br />seguro</span>
-                </li>
-                <li>
-                  <svg class="trust-icon" aria-hidden="true">
-                    <use href="#i-bolt" />
-                  </svg>
-                  <span>Acesso digital<br />imediato</span>
-                </li>
-              </ul>
+              <div class="offer-body">
+                <p class="offer-kicker">Chega de gastar com Fast Food</p>
+
+                <p class="price-line">
+                  <span class="price-cur">R$</span>
+                  <s class="price-old price-old-sm">69,90</s>
+                </p>
+                <p class="price-line">
+                  <span class="price-cur">R$</span>
+                  <strong class="price-new">37,90</strong>
+                </p>
+
+                <p class="offer-terms">
+                  Em até <b>12× de R$ 3,92</b> no cartão.
+                </p>
+
+                <ul class="plano-feats">
+                  <li>
+                    <svg class="feat-icon" aria-hidden="true">
+                      <use href="#i-check" />
+                    </svg>
+                    <span>8 semanas de cardápio, 40 almoços</span>
+                  </li>
+                  <li>
+                    <svg class="feat-icon" aria-hidden="true">
+                      <use href="#i-check" />
+                    </svg>
+                    <span>8 listas de compras</span>
+                  </li>
+                  <li>
+                    <svg class="feat-icon" aria-hidden="true">
+                      <use href="#i-check" />
+                    </svg>
+                    <span>Todos os preparos-base</span>
+                  </li>
+                  <li>
+                    <svg class="feat-icon" aria-hidden="true">
+                      <use href="#i-check" />
+                    </svg>
+                    <span>Rendimentos e substituições</span>
+                  </li>
+                  <li>
+                    <svg class="feat-icon" aria-hidden="true">
+                      <use href="#i-check" />
+                    </svg>
+                    <span>84 páginas · acesso vitalício</span>
+                  </li>
+                </ul>
+
+                <div class="offer-cta">
+                  <a
+                    class="btn btn-primary"
+                    href="https://pay.hotmart.com/X107571787Q?checkoutMode=10"
+                    data-checkout
+                  >
+                    QUERO O COMPLETO
+                    <span class="arrow" aria-hidden="true">→</span>
+                  </a>
+                  <p class="cta-note">Garantia de 7 dias · devolução integral</p>
+                </div>
+
+                <ul class="offer-trust">
+                  <li>
+                    <svg class="trust-icon" aria-hidden="true">
+                      <use href="#i-lock" />
+                    </svg>
+                    <span>Pagamento<br />seguro</span>
+                  </li>
+                  <li>
+                    <svg class="trust-icon" aria-hidden="true">
+                      <use href="#i-bolt" />
+                    </svg>
+                    <span>Acesso digital<br />imediato</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <p class="planos-ou"><span>ou comece menor</span></p>
+
+            <!-- ---------- BÁSICO (entrada) ---------- -->
+            <div class="offer-card plano plano-entrada">
+              <div class="offer-head">
+                <h3 class="offer-title">Básico</h3>
+                <p class="offer-sub">
+                  1 semana · 5 almoços · 1 lista de compras
+                </p>
+              </div>
+
+              <div class="offer-body">
+                <p class="offer-kicker">Para experimentar o método</p>
+
+                <p class="price-line">
+                  <span class="price-cur">R$</span>
+                  <strong class="price-new price-new-sm">9,90</strong>
+                </p>
+
+                <p class="offer-terms">
+                  Em até <b>3× de R$ 3,53</b> no cartão.
+                </p>
+
+                <ul class="plano-feats">
+                  <li>
+                    <svg class="feat-icon" aria-hidden="true">
+                      <use href="#i-check" />
+                    </svg>
+                    <span>1 semana de cardápio, 5 almoços</span>
+                  </li>
+                  <li>
+                    <svg class="feat-icon" aria-hidden="true">
+                      <use href="#i-check" />
+                    </svg>
+                    <span>Lista de compras com checkboxes</span>
+                  </li>
+                  <li>
+                    <svg class="feat-icon" aria-hidden="true">
+                      <use href="#i-check" />
+                    </svg>
+                    <span>Domingo de preparo em 9 etapas</span>
+                  </li>
+                  <li>
+                    <svg class="feat-icon" aria-hidden="true">
+                      <use href="#i-check" />
+                    </svg>
+                    <span>16 páginas · acesso vitalício</span>
+                  </li>
+                </ul>
+
+                <div class="offer-cta">
+                  <a
+                    class="btn btn-ghost"
+                    href="https://pay.hotmart.com/W107647877R?checkoutMode=10"
+                    data-checkout
+                  >
+                    Começar com 1 semana
+                  </a>
+                  <p class="cta-note">Garantia de 7 dias · devolução integral</p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -623,6 +742,24 @@
               <p class="faq-answer">
                 Um acesso para fazer o download do nosso material em PDF, podendo
                 utilizar pelo próprio dispositivo ou imprimir e usar como livro.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                Qual a diferença entre o Básico e o Completo?
+                <span class="caret" aria-hidden="true">
+                  <svg><use href="#i-chevron" /></svg>
+                </span>
+              </summary>
+              <p class="faq-answer">
+                O método é o mesmo nos dois: você cozinha em um domingo e monta
+                cinco potes. O que muda é o tamanho. O Básico traz uma semana - 5
+                almoços, uma lista de compras e o passo a passo do domingo, em 16
+                páginas. O Completo traz oito semanas - 40 almoços, 8 listas, os
+                12 preparos-base e os anexos de rendimento, substituição e
+                congelamento, em 84 páginas. Em custo por almoço, o Completo sai
+                por cerca de metade do valor do Básico.
               </p>
             </details>
 
@@ -735,11 +872,7 @@
 
         <!-- ============ FECHAMENTO ============ -->
         <section class="fechamento">
-          <a
-            class="btn btn-primary"
-            href="https://pay.hotmart.com/X107571787Q?checkoutMode=10"
-            data-checkout
-          >
+          <a class="btn btn-primary" href="#oferta">
             Quero montar minhas marmitas
             <span class="arrow" aria-hidden="true">→</span>
           </a>
@@ -774,15 +907,8 @@
           ></span>
           <span class="brand-name">Cinco Potes</span>
         </a>
-        <a
-          class="btn btn-primary sticky-buy"
-          href="https://pay.hotmart.com/X107571787Q?checkoutMode=10"
-          data-checkout
-        >
-          <span class="sticky-buy-label">ADQUIRIR DESCONTO</span>
-          <span class="sticky-buy-price">
-            <s>R$ 69,90</s> <b>R$ 37,90</b>
-          </span>
+        <a class="btn btn-primary sticky-buy" href="#oferta">
+          <span class="sticky-buy-label">ADQUIRIR DESCONTO LIMITADO</span>
         </a>
       </div>
 

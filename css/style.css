@@ -124,12 +124,16 @@ svg {
 }
 
 @media (min-width: 760px) {
-  /* Só o pé é arredondado: o header é fixo e sai do cartão ao rolar, e
-     cantos arredondados flutuando no topo da janela ficam soltos. */
+  /* O header rola junto com o cartão, então os quatro cantos são
+     arredondados. (Enquanto ele era fixo, o topo ficava reto: o header
+     saía do cartão ao rolar e deixava os cantos soltos no alto da janela.) */
   .shell {
     margin-block: 32px;
-    border-radius: 0 0 28px 28px;
+    border-radius: 28px;
     box-shadow: 0 24px 60px -24px rgba(28, 26, 23, 0.35);
+  }
+  .shell > .site-header {
+    border-radius: 28px 28px 0 0;
   }
   .shell > .site-footer {
     border-radius: 0 0 28px 28px;
@@ -228,17 +232,16 @@ svg {
    HEADER
    ========================================================================== */
 .site-header {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 20;
   height: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 var(--gutter);
-  background: rgba(251, 247, 240, 0.94);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  /* sólido: sem ser fixo, nada passa por baixo - o translúcido com blur
+     que existia aqui só custava pintura */
+  background: var(--cream);
   border-bottom: 1px solid var(--line);
 }
 
@@ -479,6 +482,157 @@ svg {
   line-height: 46.8px;
   letter-spacing: -0.03em;
   color: var(--green-deep);
+}
+
+/* ---------- título do desconto ----------
+   A frase é a mesma, dividida em três níveis para o número dominar: linha de
+   entrada pequena em caixa alta, número grande em terracota, fecho em corpo
+   médio. O text-transform deixa o HTML com o texto escrito por extenso. */
+.desconto-titulo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.desconto-cima {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 19.2px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--forest);
+}
+
+/* caixa do número: reserva altura fixa para a troca não empurrar o texto */
+.desconto-vagas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  overflow: hidden;
+}
+
+/* tamanho próximo ao das linhas ao redor - o número marca presença pelo
+   peso e pela cor, não por ser gigante */
+.vagas-num {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30px;
+  letter-spacing: -0.02em;
+  /* verde-mata em vez de terracota: o vermelho do preço riscado e o do botão
+     já ocupam a seção, e três vermelhos juntos brigavam entre si. O número
+     continua sendo o foco pelo tamanho, não pela cor. */
+  color: var(--forest);
+  font-variant-numeric: tabular-nums;
+  will-change: transform, opacity;
+}
+
+/* a baixa: o número antigo sobe e some, o novo entra por baixo. O troca de
+   conteúdo acontece no meio da animação, em js/main.js */
+.vagas-num.baixou {
+  animation: vaga-baixa 0.52s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes vaga-baixa {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  44% {
+    transform: translateY(-46%);
+    opacity: 0;
+  }
+  45% {
+    transform: translateY(46%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.desconto-baixo {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 21px;
+  line-height: 27px;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  max-width: 17ch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vagas-num.baixou {
+    animation: none;
+  }
+}
+
+/* alternativa discreta sob o CTA de desconto: mesma família visual dos
+   planos, mas sem preenchimento, sem sombra e com tipo menor - existe para
+   dar saída ao Básico sem disputar com o desconto do Completo acima */
+.alt-ou {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  line-height: 20.8px;
+  color: var(--muted-2);
+}
+
+.alt-ou::before,
+.alt-ou::after {
+  content: '';
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--line-2);
+}
+
+.alt-plano {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  min-height: 46px;
+  padding: 11px 18px;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  background: transparent;
+  text-decoration: none;
+  transition: border-color 0.16s ease, background-color 0.16s ease;
+}
+
+.alt-plano-label {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 21px;
+  color: var(--ink);
+}
+
+.alt-plano-price {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 21px;
+  letter-spacing: -0.02em;
+  color: var(--muted);
+}
+
+@media (hover: hover) {
+  .alt-plano:hover {
+    border-color: var(--line-3);
+    background: rgba(28, 26, 23, 0.03);
+  }
+}
+
+.alt-plano:active {
+  transform: translateY(1px);
 }
 
 /* ==========================================================================
@@ -891,6 +1045,9 @@ svg {
   flex-direction: column;
   gap: 32px;
   padding: 64px var(--gutter);
+  /* respiro ao ancorar aqui pelos CTAs, para o título não encostar no topo
+     da janela (o header não é mais fixo, então basta uma folga pequena) */
+  scroll-margin-top: 16px;
 }
 
 .offer-card {
@@ -987,6 +1144,143 @@ svg {
   color: var(--green-deep);
 }
 
+/* ---------- planos ----------
+   A coluna é sempre 390px, então os dois cartões empilham. A hierarquia é
+   feita por peso visual, não por posição: o Completo leva selo, borda
+   terracota, sombra e CTA sólido; o Básico fica liso e com CTA vazado. */
+.planos-sub {
+  font-size: 14px;
+  line-height: 22.4px;
+  color: var(--muted);
+  text-align: center;
+  padding-top: 8px;
+}
+
+.planos {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.plano {
+  position: relative;
+}
+
+/* --- o destaque --- */
+.plano-hero {
+  border: 2px solid var(--terra);
+  box-shadow: 0 18px 36px -16px rgba(180, 72, 42, 0.32),
+    0 1px 2px 0 rgba(28, 26, 23, 0.05);
+}
+
+.plano-badge {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: var(--terra);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* o selo fica sobre a borda: abre espaço no topo para não colidir */
+.plano-hero .offer-head {
+  padding-top: 30px;
+}
+
+/* --- a entrada --- */
+.plano-entrada {
+  border: 1px solid var(--line-2);
+  box-shadow: none;
+  background: #fdfbf8;
+}
+
+.plano-entrada .offer-title {
+  font-size: 20px;
+  line-height: 32px;
+}
+
+/* preço menor e em tinta neutra: o verde marca preço promocional, e o Básico
+   não tem desconto - além de não disputar atenção com o Completo */
+.price-new-sm {
+  font-size: 38px;
+  line-height: 38px;
+  color: var(--ink);
+}
+
+/* separador entre os dois cartões */
+.planos-ou {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 2px 4px;
+  font-size: 13px;
+  line-height: 20.8px;
+  color: var(--muted-2);
+}
+
+.planos-ou::before,
+.planos-ou::after {
+  content: '';
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--line-2);
+}
+
+.plano-feats {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 4px 0 2px;
+  list-style: none;
+}
+
+.plano-feats li {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--muted-2);
+}
+
+.feat-icon {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  margin-top: 2.5px;
+  color: var(--green-deep);
+}
+
+/* CTA vazado do plano de entrada */
+.btn-ghost {
+  min-height: 50px;
+  padding: 12px 20px;
+  border: 1.5px solid var(--line-3);
+  background: transparent;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+@media (hover: hover) {
+  .btn-ghost:hover {
+    border-color: var(--ink);
+    background: rgba(28, 26, 23, 0.04);
+  }
+}
+
+.btn-ghost:active {
+  transform: translateY(1px);
+}
+
 /* ==========================================================================
    GARANTIA
    ========================================================================== */
@@ -1059,8 +1353,8 @@ svg {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  min-height: 60px;
-  padding: 8px 0;
+  min-height: 64px;
+  padding: 16px 0;
   cursor: pointer;
   list-style: none;
   font-size: 16px;
@@ -1096,9 +1390,9 @@ svg {
 }
 
 .faq-answer {
-  padding: 0 42px 20px 0;
+  padding: 0 42px 26px 0;
   font-size: 15px;
-  line-height: 23.25px;
+  line-height: 25.5px;
   color: var(--muted);
 }
 
@@ -1197,11 +1491,9 @@ svg {
   white-space: nowrap;
 }
 
-/* CTA: rótulo em cima, preço ancorado embaixo, sempre em uma linha */
+/* CTA: rótulo único, centralizado */
 .sticky-cta .btn {
   flex: 1;
-  flex-direction: column;
-  gap: 2px;
   min-width: 0;
   min-height: 52px;
   padding: 8px 10px;
@@ -1215,40 +1507,28 @@ svg {
 }
 
 .sticky-buy-label {
+  /* min-width:0 é necessário aqui porque o .btn base é display:flex: sem
+     isso o span, sendo item flex, recusa encolher abaixo do texto em uma
+     linha só e vaza para fora do botão em vez de quebrar */
+  min-width: 0;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.02em;
-  line-height: 1.1;
-  white-space: nowrap;
+  line-height: 1.25;
+  text-align: center;
 }
 
-.sticky-buy-price {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  font-size: 12.5px;
-  line-height: 1.1;
-  white-space: nowrap;
-}
-
-.sticky-buy-price s {
-  font-weight: 500;
-  color: var(--terra-soft);
-  text-decoration-thickness: 1.5px;
-}
-
-.sticky-buy-price b {
-  font-weight: 700;
-}
-
-/* telas bem estreitas: esconde o nome da marca, mantém só o ícone,
-   liberando espaço para o rótulo do botão caber em uma linha */
-@media (max-width: 360px) {
+/* Abaixo de 390px (a própria largura de design da coluna) o botão tem menos
+   espaço do que o cálculo original previa - esconde o nome da marca, mantém
+   só o ícone, e encolhe a fonte do rótulo para caber numa linha só. 390px
+   cobre também telas como 375px (iPhone SE/mini), comuns o bastante para
+   não ficarem de fora da rede de segurança. */
+@media (max-width: 390px) {
   .sticky-cta .brand-name {
     display: none;
   }
   .sticky-buy-label {
-    font-size: 12.5px;
+    font-size: 12px;
   }
 }
 
@@ -1278,6 +1558,7 @@ svg {
     .band-photo,
     .price-block,
     .desconto > .btn,
+    .desconto > .alt-plano,
     .passo,
     .apoio-card,
     .numero,
@@ -1312,6 +1593,7 @@ svg {
       .band-photo,
       .price-block,
       .desconto > .btn,
+    .desconto > .alt-plano,
       .passo,
       .apoio-card,
       .numero,

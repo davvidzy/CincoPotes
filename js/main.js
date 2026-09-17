@@ -119,6 +119,7 @@
     '.band-photo',
     '.price-block',
     '.desconto > .btn',
+    '.desconto > .alt-plano',
     '.passo',
     '.apoio-card',
     '.numero',
@@ -224,4 +225,116 @@
     flushTimer = setTimeout(flushMissed, 150);
   }
   window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* ---------- vagas do desconto ----------
+     O número cai sozinho com o passar do tempo e nunca volta a subir para
+     quem já viu um valor menor - é o que faz a contagem parecer contínua
+     em vez de reiniciar a cada visita.
+
+     Três regras seguram o comportamento:
+     1. V_ANCORA fixa o começo da rodada. Enquanto ela não mudar, todo mundo
+        vê o mesmo número no mesmo momento. Suba a data ao abrir uma rodada
+        nova - o localStorage guarda a âncora junto e se reinicia sozinho.
+     2. V_PISO é onde a contagem para. Nunca chega a zero, que quebraria a
+        frase e o próprio argumento da página.
+     3. V_MAX_SESSAO limita as baixas ao vivo. Sem isso, uma aba esquecida
+        aberta derrubaria o contador até o piso. */
+  var vagasEl = document.getElementById('vagasRestantes');
+
+  if (vagasEl) {
+    var V_INICIO = 23;
+    var V_PISO = 4;
+    var V_ANCORA = Date.UTC(2026, 8, 17, 9, 0, 0); /* rodada atual */
+    var V_PASSO_MS = 8 * 60 * 60 * 1000; /* uma baixa a cada 8h */
+    var V_CHAVE = 'cp.vagas';
+    var V_MAX_SESSAO = 3;
+
+    var vagasPorTempo = function () {
+      var decorrido = Date.now() - V_ANCORA;
+      if (decorrido < 0) return V_INICIO;
+      return Math.max(V_PISO, V_INICIO - Math.floor(decorrido / V_PASSO_MS));
+    };
+
+    var vagasSalvas = function () {
+      try {
+        var bruto = window.localStorage.getItem(V_CHAVE);
+        if (!bruto) return null;
+        var d = JSON.parse(bruto);
+        return d && d.a === V_ANCORA && typeof d.v === 'number' ? d.v : null;
+      } catch (e) {
+        return null;
+      }
+    };
+
+    var salvaVagas = function (v) {
+      try {
+        window.localStorage.setItem(
+          V_CHAVE,
+          JSON.stringify({ a: V_ANCORA, v: v })
+        );
+      } catch (e) {
+        /* navegação anônima ou storage bloqueado: segue sem persistir */
+      }
+    };
+
+    var vagas = vagasPorTempo();
+    var salvo = vagasSalvas();
+    if (salvo !== null && salvo < vagas) vagas = salvo;
+    vagasEl.textContent = vagas;
+    salvaVagas(vagas);
+
+    var semMovimento = false;
+    try {
+      semMovimento = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches;
+    } catch (e) {}
+
+    var baixaUma = function () {
+      if (vagas <= V_PISO) return false;
+      vagas--;
+      salvaVagas(vagas);
+
+      if (semMovimento) {
+        vagasEl.textContent = vagas;
+        return true;
+      }
+
+      vagasEl.classList.remove('baixou');
+      void vagasEl.offsetWidth; /* reinicia a animação */
+      vagasEl.classList.add('baixou');
+      /* troca o número no meio do movimento, enquanto ele está fora de
+         vista - o de cima sai e o de baixo entra já com o valor novo */
+      setTimeout(function () {
+        vagasEl.textContent = vagas;
+      }, 230);
+      return true;
+    };
+
+    var restamNaSessao = V_MAX_SESSAO;
+    var agendaBaixa = function () {
+      if (restamNaSessao <= 0 || vagas <= V_PISO) return;
+      setTimeout(function () {
+        if (baixaUma()) restamNaSessao--;
+        agendaBaixa();
+      }, 45000 + Math.random() * 65000);
+    };
+
+    /* só começa a agendar quando a seção entra em tela: a baixa precisa
+       acontecer com a pessoa olhando, senão não comunica nada */
+    var secDesconto = document.getElementById('desconto');
+    if (secDesconto && 'IntersectionObserver' in window) {
+      var obsVagas = new IntersectionObserver(
+        function (e) {
+          if (!e[0].isIntersecting) return;
+          obsVagas.disconnect();
+          agendaBaixa();
+        },
+        { threshold: 0.3 }
+      );
+      obsVagas.observe(secDesconto);
+    } else {
+      agendaBaixa();
+    }
+  }
 })();
