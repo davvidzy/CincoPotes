@@ -429,25 +429,8 @@ svg {
 
 /* ==========================================================================
    PREÇOS
+   Usadas nos cartões de plano (.offer-body .price-line, ver seção OFERTA).
    ========================================================================== */
-.desconto {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 64px var(--gutter);
-}
-
-.price-block {
-  padding-top: 8px;
-}
-
-.price-label {
-  font-size: 14px;
-  line-height: 22.4px;
-  color: var(--muted);
-  text-align: center;
-}
-
 .price-line {
   display: flex;
   align-items: flex-end;
@@ -482,157 +465,6 @@ svg {
   line-height: 46.8px;
   letter-spacing: -0.03em;
   color: var(--green-deep);
-}
-
-/* ---------- título do desconto ----------
-   A frase é a mesma, dividida em três níveis para o número dominar: linha de
-   entrada pequena em caixa alta, número grande em terracota, fecho em corpo
-   médio. O text-transform deixa o HTML com o texto escrito por extenso. */
-.desconto-titulo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  text-align: center;
-}
-
-.desconto-cima {
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 19.2px;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--forest);
-}
-
-/* caixa do número: reserva altura fixa para a troca não empurrar o texto */
-.desconto-vagas {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 30px;
-  overflow: hidden;
-}
-
-/* tamanho próximo ao das linhas ao redor - o número marca presença pelo
-   peso e pela cor, não por ser gigante */
-.vagas-num {
-  display: block;
-  font-family: var(--serif);
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 30px;
-  letter-spacing: -0.02em;
-  /* verde-mata em vez de terracota: o vermelho do preço riscado e o do botão
-     já ocupam a seção, e três vermelhos juntos brigavam entre si. O número
-     continua sendo o foco pelo tamanho, não pela cor. */
-  color: var(--forest);
-  font-variant-numeric: tabular-nums;
-  will-change: transform, opacity;
-}
-
-/* a baixa: o número antigo sobe e some, o novo entra por baixo. O troca de
-   conteúdo acontece no meio da animação, em js/main.js */
-.vagas-num.baixou {
-  animation: vaga-baixa 0.52s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes vaga-baixa {
-  0% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  44% {
-    transform: translateY(-46%);
-    opacity: 0;
-  }
-  45% {
-    transform: translateY(46%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-.desconto-baixo {
-  font-family: var(--serif);
-  font-weight: 600;
-  font-size: 21px;
-  line-height: 27px;
-  letter-spacing: -0.015em;
-  color: var(--ink);
-  max-width: 17ch;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .vagas-num.baixou {
-    animation: none;
-  }
-}
-
-/* alternativa discreta sob o CTA de desconto: mesma família visual dos
-   planos, mas sem preenchimento, sem sombra e com tipo menor - existe para
-   dar saída ao Básico sem disputar com o desconto do Completo acima */
-.alt-ou {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 13px;
-  line-height: 20.8px;
-  color: var(--muted-2);
-}
-
-.alt-ou::before,
-.alt-ou::after {
-  content: '';
-  flex: 1 1 auto;
-  height: 1px;
-  background: var(--line-2);
-}
-
-.alt-plano {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 4px 10px;
-  min-height: 46px;
-  padding: 11px 18px;
-  border: 1px solid var(--line-2);
-  border-radius: 999px;
-  background: transparent;
-  text-decoration: none;
-  transition: border-color 0.16s ease, background-color 0.16s ease;
-}
-
-.alt-plano-label {
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 21px;
-  color: var(--ink);
-}
-
-.alt-plano-price {
-  font-family: var(--serif);
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 21px;
-  letter-spacing: -0.02em;
-  color: var(--muted);
-}
-
-@media (hover: hover) {
-  .alt-plano:hover {
-    border-color: var(--line-3);
-    background: rgba(28, 26, 23, 0.03);
-  }
-}
-
-.alt-plano:active {
-  transform: translateY(1px);
 }
 
 /* ==========================================================================
@@ -1546,7 +1378,7 @@ svg {
    Só entra em ação quando o JS marca <html class="js">.
 
    A lista fica dentro de :where() de propósito: sem isso um seletor como
-   ".js .desconto > .btn" (3 classes) pesa mais que ".js .is-in" (2) e o
+   ".js .fechamento > .btn" (3 classes) pesa mais que ".js .is-in" (2) e o
    elemento nunca reaparece. Com :where() toda a lista vale (0,1,0) e quem
    revela sempre ganha - não importa quantas classes a entrada tenha.
    ========================================================================== */
@@ -1556,9 +1388,6 @@ svg {
     .sec-head > *,
     .receber-item,
     .band-photo,
-    .price-block,
-    .desconto > .btn,
-    .desconto > .alt-plano,
     .passo,
     .apoio-card,
     .numero,
@@ -1591,9 +1420,6 @@ svg {
       .sec-head > *,
       .receber-item,
       .band-photo,
-      .price-block,
-      .desconto > .btn,
-    .desconto > .alt-plano,
       .passo,
       .apoio-card,
       .numero,

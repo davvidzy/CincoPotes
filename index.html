@@ -20,7 +20,7 @@
          Sem o ?v= abaixo, quem já visitou o site continua com os arquivos
          antigos e vê a página sem estilo. Suba o número a cada deploy que
          mexer em css/style.css ou js/main.js. -->
-    <link rel="stylesheet" href="css/style.css?v=11" />
+    <link rel="stylesheet" href="css/style.css?v=12" />
     <!-- Liga o reveal ao scroll antes do primeiro paint (evita piscada).
          Não entra se o usuário pede menos movimento, e um timeout de
          segurança libera o conteúdo caso main.js não carregue. -->
@@ -42,7 +42,7 @@
         }, 2500);
       })();
     </script>
-    <script src="js/main.js?v=11" defer></script>
+    <script src="js/main.js?v=12" defer></script>
 
     <!-- Meta Pixel Code -->
     <script>
@@ -244,53 +244,6 @@
             loading="lazy"
             decoding="async"
           />
-        </section>
-
-        <!-- ============ DESCONTO ============ -->
-        <section class="desconto" id="desconto" aria-labelledby="desconto-t">
-          <div class="sec-head">
-            <!-- Mesmo texto, quebrado em três níveis para o número virar o
-                 foco. O valor de #vagasRestantes é controlado pelo contador
-                 em js/main.js; o 23 do markup é o estado inicial e o que
-                 aparece se o JS não rodar. -->
-            <h2 class="t-h2 desconto-titulo" id="desconto-t">
-              <span class="desconto-cima">Desconto para os próximos</span>
-              <span class="desconto-vagas">
-                <span class="vagas-num" id="vagasRestantes">23</span>
-              </span>
-              <span class="desconto-baixo">clientes sobre o plano completo</span>
-            </h2>
-          </div>
-
-          <div class="price-block">
-            <p class="price-label">De</p>
-            <p class="price-line">
-              <span class="price-cur">R$</span>
-              <s class="price-old">69,90</s>
-            </p>
-          </div>
-
-          <div class="price-block">
-            <p class="price-label">Por</p>
-            <p class="price-line">
-              <span class="price-cur">R$</span>
-              <strong class="price-new">37,90</strong>
-            </p>
-          </div>
-
-          <a class="btn btn-primary" href="#oferta">
-            COMPRAR COM DESCONTO
-            <span class="arrow" aria-hidden="true">→</span>
-          </a>
-
-          <!-- alternativa discreta: mesma família visual, peso bem menor,
-               para não competir com o desconto do Completo acima -->
-          <p class="alt-ou"><span>ou</span></p>
-
-          <a class="alt-plano" href="#oferta">
-            <span class="alt-plano-label">Leve no Plano Básico</span>
-            <span class="alt-plano-price">R$ 9,90</span>
-          </a>
         </section>
 
         <!-- ============ COMO FUNCIONA ============ -->
