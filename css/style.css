@@ -242,6 +242,38 @@ svg {
   border-bottom: 1px solid var(--line);
 }
 
+/* Compra no header: fica visível o tempo todo sem competir com o CTA do
+   hero - é menor, tem menos sombra e não usa seta. */
+.btn-head {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: var(--terra);
+  color: var(--white);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 0 0 var(--terra-deep);
+  transition: transform 0.16s ease, background-color 0.16s ease;
+}
+
+@media (hover: hover) {
+  .btn-head:hover {
+    background: #a54126;
+    transform: translateY(-1px);
+  }
+}
+
+.btn-head:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
 /* ==========================================================================
    BOTÃO
    ========================================================================== */
@@ -642,88 +674,213 @@ svg {
 }
 
 /* ==========================================================================
-   DEPOIMENTO
+   DEPOIMENTOS
+   Prints reais de conversa, empilhados na largura cheia da coluna. Nesse
+   tamanho o texto do print continua legível; em carrossel ele ficaria
+   pequeno demais e metade passaria batido. O cartão claro separa o print
+   escuro do fundo creme.
    ========================================================================== */
 .depoimento {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 16px;
+  gap: 24px;
   padding: 64px var(--gutter);
 }
 
-.depoimento .sec-head {
-  align-self: stretch;
+.depo-track {
+  display: flex;
+  align-items: flex-start; /* cada print tem uma altura; não estica ninguém */
+  gap: 14px;
+  /* sangra até a borda da coluna para o próximo print "espiar" */
+  margin-inline: calc(var(--gutter) * -1);
+  padding-inline: var(--gutter);
+  padding-block: 4px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: var(--gutter);
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
 }
 
-.quote {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 262px;
-  max-width: 100%;
-  padding: 40px 20px 24px;
+.depo-track::-webkit-scrollbar {
+  display: none;
+}
+
+.depo-card {
+  flex: 0 0 300px;
+  padding: 10px;
   background: var(--white);
   border: 1px solid var(--line);
-  border-radius: 20px;
-  box-shadow: var(--shadow-panel);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  scroll-snap-align: start;
 }
 
-.quote-mark {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: 44px;
-  line-height: 26.4px;
-  color: var(--terra);
+/* o print inteiro é a área de toque; o botão não tem cara de botão */
+.depo-open {
+  display: block;
+  position: relative;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  cursor: zoom-in;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.quote blockquote {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 27px;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-  padding-bottom: 8px;
+.depo-open img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
 }
 
-.quote figcaption {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-top: 16px;
-  border-top: 1px solid var(--line);
-}
-
-.quote-avatar {
+/* selo de lupa: avisa que dá para ampliar sem ocupar espaço de texto */
+.depo-zoom {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
   display: grid;
   place-items: center;
-  flex: 0 0 38px;
-  width: 38px;
-  height: 38px;
-  border-radius: 999px;
-  background: #d2d6cd;
-  color: var(--forest);
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.quote-who {
-  display: flex;
-  flex-direction: column;
-}
-
-.quote-who b {
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 18.2px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(251, 247, 240, 0.92);
   color: var(--ink);
+  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.5);
 }
 
-.quote-who small {
-  font-size: 12.5px;
-  line-height: 16.25px;
-  color: var(--muted-2);
+.depo-zoom svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2;
+}
+
+/* ==========================================================================
+   LIGHTBOX
+   Sobe acima da barra fixa (50) e do WhatsApp (45). A imagem ocupa a
+   largura toda e rola na vertical quando é mais alta que a tela - o pinch
+   do navegador continua valendo, e o arquivo tem 1000px de largura para
+   aguentar o zoom.
+   ========================================================================== */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  padding: 60px 12px 28px;
+  background: rgba(12, 11, 10, 0.94);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.lightbox[hidden] {
+  display: none;
+}
+
+.lightbox-body {
+  margin: auto;
+  width: 100%;
+  max-width: 560px;
+}
+
+.lightbox img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.lightbox-close {
+  position: fixed;
+  top: calc(12px + env(safe-area-inset-top, 0px));
+  /* no celular encosta na borda; em tela larga acompanha a caixa de 560px
+     da imagem, em vez de fugir para o canto da janela */
+  right: max(12px, calc(50% - 280px + 12px));
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  cursor: pointer;
+}
+
+.lightbox-close svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.2;
+}
+
+@media (hover: hover) {
+  .lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.24);
+  }
+}
+
+/* ==========================================================================
+   WHATSAPP
+   Usa a mesma âncora de largura do .sticky-cta, então acompanha a coluna
+   de 390px em qualquer tela. O bottom reserva a altura da barra fixa de
+   compra, para os dois nunca se cobrirem.
+   ========================================================================== */
+.wa-dock {
+  position: fixed;
+  left: 0;
+  right: 0;
+  /* barra de compra escondida: o botão ocupa o rodapé */
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 45;
+  display: flex;
+  justify-content: flex-end;
+  width: min(390px, 100%);
+  margin-inline: auto;
+  padding-inline: 16px;
+  pointer-events: none; /* a faixa não bloqueia o conteúdo atrás */
+  transition: bottom 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* barra de compra visível: o botão sobe junto, na mesma curva e no mesmo
+   tempo da barra, e para logo acima dela */
+.sticky-cta.show ~ .wa-dock {
+  bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+}
+
+.wa-fab {
+  pointer-events: auto;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #1eb355;
+  color: var(--white);
+  text-decoration: none;
+  box-shadow: 0 8px 18px -8px rgba(19, 100, 50, 0.7), 0 2px 0 0 #14803d;
+  transition: transform 0.16s ease, background-color 0.16s ease;
+}
+
+/* o logo do WhatsApp é sólido: desfaz o traço que o reset aplica nos ícones */
+.wa-fab svg {
+  width: 27px;
+  height: 27px;
+  fill: currentColor;
+  stroke: none;
+}
+
+@media (hover: hover) {
+  .wa-fab:hover {
+    background: #19a04c;
+    transform: translateY(-1px);
+  }
+}
+
+.wa-fab:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 0 0 #14803d;
 }
 
 /* ==========================================================================
@@ -1124,7 +1281,7 @@ svg {
     .passo,
     .apoio-card,
     .numero,
-    .quote,
+    .depo-card,
     .offer-card,
     .garantia-row,
     .faq details,
@@ -1158,7 +1315,7 @@ svg {
       .passo,
       .apoio-card,
       .numero,
-      .quote,
+      .depo-card,
       .offer-card,
       .garantia-row,
       .faq details,
@@ -1171,8 +1328,11 @@ svg {
   }
 
   .btn,
+  .btn-head,
   .caret,
-  .sticky-cta {
+  .sticky-cta,
+  .wa-dock,
+  .wa-fab {
     transition: none;
   }
 }

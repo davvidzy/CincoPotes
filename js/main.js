@@ -31,27 +31,81 @@
     ).observe(offer);
   }
 
-  /* ---------- indicador do carrossel de passos ----------
-     O card que ocupa mais de 60% da trilha é o "atual". */
-  var track = document.querySelector('.passos-track');
-  var dots = [].slice.call(document.querySelectorAll('#dots b'));
+  /* ---------- indicador dos carrosséis ----------
+     Vale para qualquer .snap-track (passos e depoimentos). O card que
+     ocupa mais de 60% da trilha é o "atual" e acende a bolinha. As
+     bolinhas são procuradas dentro do mesmo wrapper da trilha, então
+     cada carrossel controla só o indicador dele. */
+  if ('IntersectionObserver' in window) {
+    [].slice
+      .call(document.querySelectorAll('.snap-track'))
+      .forEach(function (track) {
+        var dots = [].slice.call(track.parentNode.querySelectorAll('.dots b'));
+        if (!dots.length) return;
 
-  if (track && dots.length && 'IntersectionObserver' in window) {
-    var slides = [].slice.call(track.children);
-    var dotObs = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (en) {
-          if (en.intersectionRatio <= 0.6) return;
-          var i = slides.indexOf(en.target);
-          dots.forEach(function (d, n) {
-            d.classList.toggle('on', n === i);
-          });
+        var slides = [].slice.call(track.children);
+        var dotObs = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (en) {
+              if (en.intersectionRatio <= 0.6) return;
+              var i = slides.indexOf(en.target);
+              dots.forEach(function (d, n) {
+                d.classList.toggle('on', n === i);
+              });
+            });
+          },
+          { root: track, threshold: [0.6] }
+        );
+        slides.forEach(function (s) {
+          dotObs.observe(s);
         });
-      },
-      { root: track, threshold: [0.6] }
-    );
-    slides.forEach(function (s) {
-      dotObs.observe(s);
+      });
+  }
+
+  /* ---------- lightbox dos depoimentos ----------
+     No card o print fica pequeno demais para ler. Tocar abre em tela
+     cheia, com rolagem vertical quando a imagem é mais alta que a tela.
+     Overlay simples em vez de <dialog>: funciona em WebView antiga. */
+  var lb = document.getElementById('lightbox');
+  var opens = [].slice.call(document.querySelectorAll('.depo-open'));
+
+  if (lb && opens.length) {
+    var lbImg = lb.querySelector('img');
+    var lbClose = lb.querySelector('.lightbox-close');
+    var lastFocus = null;
+
+    var abrir = function (btn) {
+      var img = btn.querySelector('img');
+      lbImg.src = img.currentSrc || img.src;
+      lbImg.alt = img.alt;
+      lastFocus = btn;
+      lb.hidden = false;
+      /* trava o fundo para o scroll não "vazar" atrás do overlay */
+      document.documentElement.style.overflow = 'hidden';
+      lb.scrollTop = 0;
+      lbClose.focus();
+    };
+
+    var fechar = function () {
+      lb.hidden = true;
+      document.documentElement.style.overflow = '';
+      lbImg.removeAttribute('src');
+      if (lastFocus) lastFocus.focus();
+    };
+
+    opens.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        abrir(btn);
+      });
+    });
+
+    /* fecha no X e em qualquer toque fora da imagem */
+    lb.addEventListener('click', function (e) {
+      if (e.target !== lbImg) fechar();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (!lb.hidden && (e.key === 'Escape' || e.key === 'Esc')) fechar();
     });
   }
 
@@ -68,7 +122,7 @@
     '.passo',
     '.apoio-card',
     '.numero',
-    '.quote',
+    '.depo-card',
     '.offer-card',
     '.garantia-row',
     '.faq details',
@@ -84,6 +138,7 @@
     '.receber-list',
     '.passos-track',
     '.numeros-grid',
+    '.depo-track',
     '.faq',
     '.site-footer',
   ].join(',');
@@ -115,7 +170,7 @@
         if (!en.isIntersecting) return;
         var el = en.target;
         /* a trilha é só gatilho: quem recebe .is-in são os cards */
-        if (el.classList.contains('passos-track')) {
+        if (el.classList.contains('snap-track')) {
           revealObs.unobserve(el);
           [].slice.call(el.children).forEach(reveal);
           return;
@@ -136,7 +191,7 @@
   pending.forEach(function (el) {
     /* Os cards do carrossel ficam fora da tela na horizontal: sozinhos nunca
        intersectariam o viewport. O gatilho deles é a trilha inteira. */
-    var track = el.closest('.passos-track');
+    var track = el.closest('.snap-track');
     if (track) {
       if (tracked.indexOf(track) === -1) {
         tracked.push(track);

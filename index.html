@@ -20,7 +20,7 @@
          Sem o ?v= abaixo, quem já visitou o site continua com os arquivos
          antigos e vê a página sem estilo. Suba o número a cada deploy que
          mexer em css/style.css ou js/main.js. -->
-    <link rel="stylesheet" href="css/style.css?v=3" />
+    <link rel="stylesheet" href="css/style.css?v=6" />
     <!-- Liga o reveal ao scroll antes do primeiro paint (evita piscada).
          Não entra se o usuário pede menos movimento, e um timeout de
          segurança libera o conteúdo caso main.js não carregue. -->
@@ -42,7 +42,7 @@
         }, 2500);
       })();
     </script>
-    <script src="js/main.js?v=3" defer></script>
+    <script src="js/main.js?v=6" defer></script>
 
     <!-- Meta Pixel Code -->
     <script>
@@ -154,6 +154,17 @@
       <symbol id="i-chevron" viewBox="0 0 24 24">
         <path d="M5 9l7 7 7-7" />
       </symbol>
+      <symbol id="i-zoom" viewBox="0 0 24 24">
+        <circle cx="10.5" cy="10.5" r="6.5" />
+        <path d="M15.5 15.5L21 21M8 10.5h5M10.5 8v5" />
+      </symbol>
+      <!-- logo do WhatsApp: é glifo sólido, então .wa-fab svg inverte o
+           fill/stroke que o reset aplica nos ícones de traço -->
+      <symbol id="i-whatsapp" viewBox="0 0 24 24">
+        <path
+          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+        />
+      </symbol>
     </svg>
 
     <div class="shell" id="top">
@@ -165,15 +176,20 @@
           ></span>
           <span class="brand-name">Cinco Potes</span>
         </a>
+        <a
+          class="btn-head"
+          href="https://pay.hotmart.com/X107571787Q?checkoutMode=10"
+          data-checkout
+          >COMPRAR</a
+        >
       </header>
 
       <main>
         <!-- ============ HERO ============ -->
         <section class="hero">
-          <h1 class="t-display">Sua semana de marmitas em apenas 2:30 hrs</h1>
+          <h1 class="t-display">40 almoços planejados para 8 semanas.</h1>
           <p class="t-lead">
-            Prepare 5 refeições num único domingo e ganhe tempo, saúde e
-            economia todos os dias.
+            Você otimiza, economiza, e come bem mesmo na correria do dia a dia.
           </p>
 
           <div class="hero-cta">
@@ -182,7 +198,7 @@
               href="https://pay.hotmart.com/X107571787Q?checkoutMode=10"
               data-checkout
             >
-              Adquirir Guia Agora
+              QUERO MEU PLANEJAMENTO
               <span class="arrow" aria-hidden="true">→</span>
             </a>
             <p class="cta-note">
@@ -265,7 +281,7 @@
             href="https://pay.hotmart.com/X107571787Q?checkoutMode=10"
             data-checkout
           >
-            Adquirir Com Desconto
+            COMPRAR COM DESCONTO
             <span class="arrow" aria-hidden="true">→</span>
           </a>
         </section>
@@ -280,7 +296,7 @@
 
           <div class="passos-wrap">
             <div
-              class="passos-track"
+              class="passos-track snap-track"
               role="group"
               aria-label="Os cinco passos, em ordem"
               tabindex="0"
@@ -394,7 +410,7 @@
         <!-- ============ NÚMEROS ============ -->
         <section class="band-forest numeros" aria-labelledby="numeros-t">
           <div class="sec-head">
-            <h2 class="t-h2" id="numeros-t">Acesso vitalício</h2>
+            <h2 class="t-h2" id="numeros-t">Tudo planejado, <br>semana por semana</h2>
           </div>
 
           <ul class="numeros-grid">
@@ -431,28 +447,75 @@
           />
         </section>
 
-        <!-- ============ DEPOIMENTO ============ -->
-        <!-- SUBSTITUIR pelos depoimentos reais de clientes antes de publicar -->
+        <!-- ============ DEPOIMENTOS ============
+             Prints reais de quem comprou, recortados na mensagem do cliente
+             (sem a resposta da marca e sem a barra do app). Ficam empilhados
+             em vez de virar carrossel: depoimento que passa batido não
+             convence, e na largura cheia da coluna o texto fica legível. -->
         <section class="depoimento" aria-labelledby="depo-t">
           <div class="sec-head">
-            <h2 class="t-h2" id="depo-t">O que muda na prática.</h2>
+            <h2 class="t-h2" id="depo-t">Quem usou e aprovou</h2>
           </div>
 
-          <figure class="quote">
-            <span class="quote-mark" aria-hidden="true">“</span>
-            <blockquote>
-              Eu cozinhava quase todo dia e ainda pedia comida duas vezes por
-              semana. Agora é domingo à tarde e pronto. A parte que mais me
-              ajudou foi saber o que congela e o que não.
-            </blockquote>
-            <figcaption>
-              <span class="quote-avatar" aria-hidden="true">MR</span>
-              <span class="quote-who">
-                <b>Mariana R.</b>
-                <small>Semana 6 do plano</small>
-              </span>
-            </figcaption>
-          </figure>
+          <div class="depo-wrap">
+            <ul
+              class="depo-track snap-track"
+              role="group"
+              aria-label="Depoimentos de clientes"
+              tabindex="0"
+            >
+              <li class="depo-card">
+                <button class="depo-open" type="button">
+                  <img
+                    src="assets/images/depoimento-1.webp"
+                    width="1000"
+                    height="1291"
+                    alt="Mensagem de cliente: a rotina de trabalho dificultava cozinhar, e o material ajudou a transformar algumas horas de organização em refeições para vários dias."
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span class="depo-zoom" aria-hidden="true">
+                    <svg><use href="#i-zoom" /></svg>
+                  </span>
+                </button>
+              </li>
+              <li class="depo-card">
+                <button class="depo-open" type="button">
+                  <img
+                    src="assets/images/depoimento-2.webp"
+                    width="1000"
+                    height="844"
+                    alt="Mensagem de cliente: agora separa algumas horas no domingo, faz tudo de uma vez e deixa a semana resolvida."
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span class="depo-zoom" aria-hidden="true">
+                    <svg><use href="#i-zoom" /></svg>
+                  </span>
+                </button>
+              </li>
+              <li class="depo-card">
+                <button class="depo-open" type="button">
+                  <img
+                    src="assets/images/depoimento-3.webp"
+                    width="1000"
+                    height="738"
+                    alt="Mensagem de cliente: não tinha noção do quanto gastava com marmitex por dia, e fazer as marmitas melhorou a economia e a rotina."
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span class="depo-zoom" aria-hidden="true">
+                    <svg><use href="#i-zoom" /></svg>
+                  </span>
+                </button>
+              </li>
+            </ul>
+
+            <div class="dots" aria-hidden="true">
+              <b class="on"></b><b></b><b></b>
+            </div>
+            <p class="swipe-hint">Arraste para ver · toque para ampliar.</p>
+          </div>
         </section>
 
         <!-- ============ OFERTA ============ -->
@@ -539,109 +602,132 @@
           <div class="faq">
             <details>
               <summary>
-                Para quem é o Cinco Potes?
+                O que é o Cinco Potes?
                 <span class="caret" aria-hidden="true">
                   <svg><use href="#i-chevron" /></svg>
                 </span>
               </summary>
               <p class="faq-answer">
-                Para quem almoça em casa ou leva marmita e quer parar de decidir
-                o almoço todos os dias. Funciona para uma pessoa e tem
-                orientação para dobrar as quantidades.
+                Somos um material digital feito para ajudar a rotina do brasileiro,
+                economicamente, otimizando tempo e mesmo assim comendo bem.
               </p>
             </details>
 
             <details>
               <summary>
-                Preciso cozinhar tudo no domingo?
+                O que exatamente vou receber ao comprar o Cinco Potes?
                 <span class="caret" aria-hidden="true">
                   <svg><use href="#i-chevron" /></svg>
                 </span>
               </summary>
               <p class="faq-answer">
-                Não. Domingo é a sugestão, mas a sequência funciona em qualquer
-                dia. Há também a variação em dois blocos menores, se preferir
-                dividir o preparo.
+                Um acesso para fazer o download do nosso material em PDF, podendo
+                utilizar pelo próprio dispositivo ou imprimir e usar como livro.
               </p>
             </details>
 
             <details>
               <summary>
-                Preciso de panela de pressão?
+                O Cinco Potes realmente ajuda a economizar?
                 <span class="caret" aria-hidden="true">
                   <svg><use href="#i-chevron" /></svg>
                 </span>
               </summary>
               <p class="faq-answer">
-                Ajuda, mas não é obrigatória. Todas as semanas têm alternativa
-                em panela comum, com o tempo ajustado.
+                Com certeza! Levando em consideração o gasto mensal de comprar marmita
+                para almoçar, o Cinco Potes te entrega o material para evitar esse
+                gasto.
               </p>
             </details>
 
             <details>
               <summary>
-                Quanto tempo leva o preparo?
+                Como recebo o material depois da compra?
                 <span class="caret" aria-hidden="true">
                   <svg><use href="#i-chevron" /></svg>
                 </span>
               </summary>
               <p class="faq-answer">
-                Cerca de 2h30, contando o tempo em que a comida cozinha sozinha.
-                A montagem dos potes leva mais uns 20 minutos.
+                Enviamos um e-mail após a confirmação de compra com o acesso para
+                fazer o download do nosso material.
               </p>
             </details>
 
             <details>
               <summary>
-                Posso substituir ingredientes?
+                O acesso é liberado imediatamente após o pagamento?
                 <span class="caret" aria-hidden="true">
                   <svg><use href="#i-chevron" /></svg>
                 </span>
               </summary>
               <p class="faq-answer">
-                Sim. O guia de substituições lista trocas equivalentes de
-                proteína, carboidrato e legume sem alterar o tempo de preparo
-                nem a validade.
+                Sim! Assim que confirmado o pagamento, o e-mail com o acesso ao
+                material é enviado para você.
               </p>
             </details>
 
             <details>
               <summary>
-                Como funciona o armazenamento?
+                Quanto tempo preciso para preparar as marmitas?
                 <span class="caret" aria-hidden="true">
                   <svg><use href="#i-chevron" /></svg>
                 </span>
               </summary>
               <p class="faq-answer">
-                Cada preparo vem marcado como geladeira, freezer ou finalizar no
-                dia, com prazo em dias e instrução de reaquecimento.
+                Cerca de 02:30h a 03:30h em um dia, em troca de uma semana tranquila.
               </p>
             </details>
 
             <details>
               <summary>
-                O material é digital? Como recebo?
+                Posso adaptar as receitas aos ingredientes que já tenho em casa?
                 <span class="caret" aria-hidden="true">
                   <svg><use href="#i-chevron" /></svg>
                 </span>
               </summary>
               <p class="faq-answer">
-                Sim, é 100% digital. Assim que o pagamento é confirmado você
-                recebe o acesso por e-mail e pode usar no celular, tablet ou
-                impresso.
+                Com certeza! Pode utilizar nosso material de base e refinar com base
+                no seu gosto, total liberdade para utilizar como quiser.
               </p>
             </details>
 
             <details>
               <summary>
-                E se eu não gostar?
+                As receitas são difíceis de preparar?
                 <span class="caret" aria-hidden="true">
                   <svg><use href="#i-chevron" /></svg>
                 </span>
               </summary>
               <p class="faq-answer">
-                Você tem 7 dias para pedir a devolução integral pelo suporte.
-                Sem justificativa e sem burocracia.
+                Não, nada complexo. Mas caso você seja uma pessoa com menos
+                familiaridade na cozinha, oferecemos o passo a passo muito bem
+                detalhado.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                Por quanto tempo terei acesso ao material?
+                <span class="caret" aria-hidden="true">
+                  <svg><use href="#i-chevron" /></svg>
+                </span>
+              </summary>
+              <p class="faq-answer">
+                É seu! O material tem acesso vitalício, comprando uma vez é seu para
+                sempre.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                Como funciona a garantia de 7 dias?
+                <span class="caret" aria-hidden="true">
+                  <svg><use href="#i-chevron" /></svg>
+                </span>
+              </summary>
+              <p class="faq-answer">
+                Você compra o produto e testa, se não gostar devolvemos seu dinheiro
+                imediatamente!
               </p>
             </details>
           </div>
@@ -698,6 +784,44 @@
             <s>R$ 69,90</s> <b>R$ 37,90</b>
           </span>
         </a>
+      </div>
+
+      <!-- ============ WHATSAPP ============
+           Acompanha a coluna de 390px. Fica embaixo enquanto a barra de
+           compra está escondida e sobe junto quando ela entra - o CSS lê o
+           .show da barra pelo seletor de irmão, sem precisar de JS. -->
+      <div class="wa-dock">
+        <a
+          class="wa-fab"
+          href="https://wa.me/5561996727795?text=Ol%C3%A1!%20Tenho%20uma%20d%C3%BAvida%20sobre%20o%20Cinco%20Potes."
+          target="_blank"
+          rel="noopener"
+          aria-label="Tirar dúvidas pelo WhatsApp"
+        >
+          <svg aria-hidden="true"><use href="#i-whatsapp" /></svg>
+        </a>
+      </div>
+
+      <!-- ============ LIGHTBOX ============
+           Abre o print em tela cheia para dar para ler. Sobe por cima de
+           tudo (z-index acima da barra fixa e do WhatsApp) e trava o scroll
+           do fundo enquanto está aberto. -->
+      <div
+        class="lightbox"
+        id="lightbox"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Depoimento ampliado"
+        hidden
+      >
+        <button class="lightbox-close" type="button" aria-label="Fechar">
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+        <div class="lightbox-body">
+          <img alt="" />
+        </div>
       </div>
     </div>
   </body>
