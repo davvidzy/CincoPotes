@@ -238,7 +238,10 @@
      2. V_PISO é onde a contagem para. Nunca chega a zero, que quebraria a
         frase e o próprio argumento da página.
      3. V_MAX_SESSAO limita as baixas ao vivo. Sem isso, uma aba esquecida
-        aberta derrubaria o contador até o piso. */
+        aberta derrubaria o contador até o piso. As primeiras V_RAPIDAS saem
+        rápido (a pessoa precisa ver o número se mexer logo que olha para a
+        seção); as demais, dentro do limite de V_MAX_SESSAO, voltam ao ritmo
+        normal, mais lento. */
   var vagasEl = document.getElementById('vagasRestantes');
 
   if (vagasEl) {
@@ -247,7 +250,12 @@
     var V_ANCORA = Date.UTC(2026, 8, 17, 9, 0, 0); /* rodada atual */
     var V_PASSO_MS = 8 * 60 * 60 * 1000; /* uma baixa a cada 8h */
     var V_CHAVE = 'cp.vagas';
-    var V_MAX_SESSAO = 3;
+    var V_MAX_SESSAO = 6;
+    var V_RAPIDAS = 3; /* quantas das baixas desta sessao saem no ritmo curto */
+    var V_RAPIDA_MIN_MS = 3000;
+    var V_RAPIDA_MAX_MS = 8000;
+    var V_NORMAL_MIN_MS = 45000;
+    var V_NORMAL_MAX_MS = 65000;
 
     var vagasPorTempo = function () {
       var decorrido = Date.now() - V_ANCORA;
@@ -312,16 +320,30 @@
     };
 
     var restamNaSessao = V_MAX_SESSAO;
+    var feitasNaSessao = 0;
     var agendaBaixa = function () {
       if (restamNaSessao <= 0 || vagas <= V_PISO) return;
+      /* as primeiras V_RAPIDAS baixas vêm rápido, para o número já se mexer
+         enquanto a pessoa ainda está olhando a seção; o resto volta ao ritmo
+         normal, senão a contagem esvazia rápido demais e para de parecer
+         orgânica */
+      var rapida = feitasNaSessao < V_RAPIDAS;
+      var min = rapida ? V_RAPIDA_MIN_MS : V_NORMAL_MIN_MS;
+      var faixa = rapida
+        ? V_RAPIDA_MAX_MS - V_RAPIDA_MIN_MS
+        : V_NORMAL_MAX_MS - V_NORMAL_MIN_MS;
       setTimeout(function () {
-        if (baixaUma()) restamNaSessao--;
+        if (baixaUma()) {
+          restamNaSessao--;
+          feitasNaSessao++;
+        }
         agendaBaixa();
-      }, 45000 + Math.random() * 65000);
+      }, min + Math.random() * faixa);
     };
 
-    /* só começa a agendar quando a seção entra em tela: a baixa precisa
-       acontecer com a pessoa olhando, senão não comunica nada */
+    /* só começa a agendar quando a seção chega perto do meio da tela: a
+       baixa precisa acontecer com a pessoa já olhando bem para o número,
+       senão não comunica nada */
     var secDesconto = document.getElementById('desconto');
     if (secDesconto && 'IntersectionObserver' in window) {
       var obsVagas = new IntersectionObserver(
@@ -330,7 +352,7 @@
           obsVagas.disconnect();
           agendaBaixa();
         },
-        { threshold: 0.3 }
+        { threshold: 0.5 }
       );
       obsVagas.observe(secDesconto);
     } else {
