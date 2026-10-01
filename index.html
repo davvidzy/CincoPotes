@@ -10,39 +10,110 @@
     />
     <meta name="theme-color" content="#FBF7F0" />
     <link rel="icon" href="favicon.ico" sizes="any" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
     <!-- O servidor manda CSS/JS ficarem 7 dias em cache (max-age=604800).
          Sem o ?v= abaixo, quem já visitou o site continua com os arquivos
          antigos e vê a página sem estilo. Suba o número a cada deploy que
          mexer em css/style.css ou js/main.js. -->
-    <link rel="stylesheet" href="css/style.css?v=12" />
-    <!-- Liga o reveal ao scroll antes do primeiro paint (evita piscada).
-         Não entra se o usuário pede menos movimento, e um timeout de
-         segurança libera o conteúdo caso main.js não carregue. -->
+    <link rel="stylesheet" href="css/style.css?v=13" />
+
+    <!-- Fontes fora do caminho crítico.
+         Como <link rel=stylesheet> normal, o CSS do Google Fonts bloqueia o
+         primeiro paint: em 3G ruim são ~2s esperando um arquivo de 1KB em
+         outro domínio, antes de desenhar qualquer coisa. Com media="print"
+         o navegador baixa sem bloquear e o onload promove para "all". O
+         texto aparece na fonte de fallback e troca quando a Fraunces/Inter
+         chega (o display=swap na URL já previa isso).
+
+         A Fraunces vem só no peso 600: é o único que o CSS usa (os dez
+         blocos com var(--serif) são todos 600). Pedir 400 e 700 custava
+         32KB de fonte - medido - que nenhuma letra da página usava. Os 700
+         do CSS são todos da Inter, que continua com os quatro pesos. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+
+    <script src="js/main.js?v=13" defer></script>
+
+    <!-- ============ CARGA ADIADA DOS RASTREADORES ============
+         Medido em celular fraco + 3G lento: os scripts de pixel somam ~116KB
+         e algumas centenas de ms de main thread travada (bloqueá-los no
+         teste derrubou o TBT de 889ms para 5ms), competindo por banda com
+         as imagens durante todo o carregamento. Nada disso precisa
+         acontecer antes da página aparecer.
+
+         Isso NÃO reduz o trabalho total - o script custa o que custa. O que
+         muda é a ordem: ele deixa de disputar com o primeiro desenho da
+         tela.
+
+         Então adiamos só o DOWNLOAD. Os eventos continuam sendo disparados
+         na hora de sempre - o stub do fbq enfileira as chamadas e o script
+         real processa a fila quando chega, que é exatamente para isso que a
+         n.queue existe no snippet oficial. Nenhum PageView é perdido.
+
+         Dispara no que vier primeiro:
+         1. qualquer interação do usuário - quem rola a página pode clicar no
+            checkout a seguir, e aí a atribuição não pode estar faltando;
+         2. 2s depois do primeiro paint - esse é o gatilho que se adapta
+            sozinho à conexão: em 4G o paint vem em ~1s e o pixel sobe em
+            ~3s; em 3G ruim o paint demora 5s e o pixel espera, em vez de
+            roubar banda de quem ainda está tentando desenhar a tela;
+         3. o load, para redes onde o paint não for reportado;
+         4. 12s de teto absoluto.
+         Um teto curto e fixo não serviria: 3,5s cai ANTES do primeiro paint
+         numa conexão ruim, que é exatamente o caso que queremos proteger. -->
     <script>
-      (function () {
-        var r = document.documentElement;
-        try {
-          if (
-            window.matchMedia &&
-            window.matchMedia('(prefers-reduced-motion: reduce)').matches
-          )
-            return;
-        } catch (e) {
-          return;
+      window.__deferTrackers = (function () {
+        var fns = [];
+        var disparado = false;
+        var eventos = ['touchstart', 'scroll', 'mousemove', 'keydown', 'click'];
+
+        function disparar() {
+          if (disparado) return;
+          disparado = true;
+          eventos.forEach(function (ev) {
+            window.removeEventListener(ev, disparar);
+          });
+          window.removeEventListener('load', disparar);
+          clearTimeout(teto);
+          while (fns.length) fns.shift()();
         }
-        r.className += ' js';
-        window.__rvSafety = setTimeout(function () {
-          r.classList.remove('js');
-        }, 2500);
+
+        eventos.forEach(function (ev) {
+          window.addEventListener(ev, disparar, { passive: true, once: true });
+        });
+        window.addEventListener('load', disparar);
+
+        try {
+          new PerformanceObserver(function (lista, obs) {
+            var pintou = lista.getEntries().some(function (e) {
+              return e.name === 'first-contentful-paint';
+            });
+            if (!pintou) return;
+            obs.disconnect();
+            setTimeout(disparar, 2000);
+          }).observe({ type: 'paint', buffered: true });
+        } catch (e) {
+          /* navegador sem PerformanceObserver: sobram o load e o teto */
+        }
+
+        var teto = setTimeout(disparar, 12000);
+
+        return function (fn) {
+          disparado ? fn() : fns.push(fn);
+        };
       })();
     </script>
-    <script src="js/main.js?v=12" defer></script>
 
     <!-- Meta Pixel Code -->
     <script>
@@ -59,11 +130,15 @@
         n.version = '2.0';
         ('');
         n.queue = [];
-        t = b.createElement(e);
-        t.async = !0;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s);
+        /* só a injeção do script sai do caminho crítico; o fbq acima já
+           está de pé e enfileirando desde agora */
+        f.__deferTrackers(function () {
+          t = b.createElement(e);
+          t.async = !0;
+          t.src = v;
+          s = b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t, s);
+        });
       })(
         window,
         document,
@@ -108,14 +183,20 @@
         b_apm8.forEach(function (o_hor) {
           window[o_hor.name] = o_hor.value;
         });
-        var g_nx = document.createElement('script');
-        g_nx.src = u_q.url;
-        g_nx.async = true;
-        g_nx.defer = true;
-        (u_q.attributes || []).forEach(function (x_tek) {
-          g_nx.setAttribute(x_tek.name, x_tek.value);
+        /* os globals acima ficam prontos na hora; só o download do script
+           espera o primeiro toque/scroll ou o load. O Utmify precisa estar
+           de pé antes de o usuário clicar no checkout, e para chegar lá ele
+           tem que rolar a página - o que já dispara a carga. */
+        window.__deferTrackers(function () {
+          var g_nx = document.createElement('script');
+          g_nx.src = u_q.url;
+          g_nx.async = true;
+          g_nx.defer = true;
+          (u_q.attributes || []).forEach(function (x_tek) {
+            g_nx.setAttribute(x_tek.name, x_tek.value);
+          });
+          (document.head || document.documentElement).appendChild(g_nx);
         });
-        (document.head || document.documentElement).appendChild(g_nx);
       })();
     </script>
     <!-- End Utmify Pixel Code -->
@@ -674,45 +755,90 @@
           <div class="faq">
             <details>
               <summary>
-                O que é o Cinco Potes?
+                Para quantas pessoas é o planejamento?
                 <span class="caret" aria-hidden="true">
                   <svg><use href="#i-chevron" /></svg>
                 </span>
               </summary>
               <p class="faq-answer">
-                Somos um material digital feito para ajudar a rotina do brasileiro,
-                economicamente, otimizando tempo e mesmo assim comendo bem.
+                Foi pensado para uma pessoa: os 5 almoços de cada semana são 5
+                potes, um para cada dia útil. Quem cozinha para duas ou mais
+                pessoas multiplica as quantidades da lista de compras e dos
+                preparos pelo número de pessoas - o cardápio e a ordem do preparo
+                continuam os mesmos.
               </p>
             </details>
 
             <details>
               <summary>
-                O que exatamente vou receber ao comprar o Cinco Potes?
+                O que exatamente eu recebo ao comprar o Cinco Potes?
                 <span class="caret" aria-hidden="true">
                   <svg><use href="#i-chevron" /></svg>
                 </span>
               </summary>
               <p class="faq-answer">
-                Um acesso para fazer o download do nosso material em PDF, podendo
-                utilizar pelo próprio dispositivo ou imprimir e usar como livro.
+                Você recebe um material digital de planejamento de refeições, não
+                um caderno de receitas soltas. Dentro dele estão os cardápios da
+                semana, a lista de compras com as quantidades, a ordem dos
+                preparos, a montagem dos potes, o armazenamento e os materiais de
+                apoio do plano que você escolher. A diferença é essa: em vez de
+                receitas para você encaixar na semana, você recebe a semana já
+                montada.
               </p>
             </details>
 
             <details>
               <summary>
-                Qual a diferença entre o Básico e o Completo?
+                Qual é a diferença entre o Básico e o Completo?
                 <span class="caret" aria-hidden="true">
                   <svg><use href="#i-chevron" /></svg>
                 </span>
               </summary>
               <p class="faq-answer">
-                O método é o mesmo nos dois: você cozinha em um domingo e monta
-                cinco potes. O que muda é o tamanho. O Básico traz uma semana - 5
-                almoços, uma lista de compras e o passo a passo do domingo, em 16
-                páginas. O Completo traz oito semanas - 40 almoços, 8 listas, os
-                12 preparos-base e os anexos de rendimento, substituição e
-                congelamento, em 84 páginas. Em custo por almoço, o Completo sai
-                por cerca de metade do valor do Básico.
+                O método é o mesmo nos dois; muda o tamanho. O Básico é uma
+                semana: 5 almoços, 1 lista de compras e o passo a passo do
+                preparo, em 16 páginas. O Completo é oito semanas: 40 almoços, 8
+                listas de compras, os preparos-base, os rendimentos, o guia de
+                substituições e as orientações de congelamento, em 84 páginas.
+                Os dois têm acesso vitalício. Se você quer conhecer o método
+                antes, o Básico resolve; se já quer os dois meses planejados, o
+                Completo.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                Por que comprar o Cinco Potes se posso encontrar receitas grátis
+                na internet?
+                <span class="caret" aria-hidden="true">
+                  <svg><use href="#i-chevron" /></svg>
+                </span>
+              </summary>
+              <p class="faq-answer">
+                Receita na internet tem de sobra. O que dá trabalho é o resto:
+                decidir o que comer nos cinco dias, virar isso em lista de
+                compras, saber quanto comprar, definir a ordem do preparo para
+                tudo sair junto e separar o que vai para a geladeira e o que vai
+                para o freezer. É essa parte que o Cinco Potes já entrega
+                resolvida. Dá para montar tudo sozinho, sim - só custa algumas
+                horas de pesquisa e organização a cada semana.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                Quanto vou gastar com os ingredientes?
+                <span class="caret" aria-hidden="true">
+                  <svg><use href="#i-chevron" /></svg>
+                </span>
+              </summary>
+              <p class="faq-answer">
+                Depende de onde você mora, do mercado onde compra e do preço dos
+                ingredientes na época, então não dá para cravar um valor que
+                sirva para todo mundo - e a gente prefere não inventar um. O que
+                o material faz é dizer o que comprar e em que quantidade para
+                cada semana, assim você vai ao mercado sabendo o tamanho da
+                compra antes de gastar.
               </p>
             </details>
 
@@ -724,87 +850,127 @@
                 </span>
               </summary>
               <p class="faq-answer">
-                Com certeza! Levando em consideração o gasto mensal de comprar marmita
-                para almoçar, o Cinco Potes te entrega o material para evitar esse
-                gasto.
+                Não prometemos um valor fixo de economia, porque isso depende da
+                rotina e do gasto atual de cada pessoa. O que muda é o
+                mecanismo: você passa a comprar com lista, preparar os cinco
+                almoços de uma vez e começar a semana com a comida pronta.
+                Quando o almoço já está resolvido, cai bastante a chance de
+                pedir algo na correria ou comprar marmita no meio da semana - e
+                normalmente é aí que o dinheiro vaza.
               </p>
             </details>
 
             <details>
               <summary>
-                Como recebo o material depois da compra?
+                As marmitas ficam boas depois de congeladas?
                 <span class="caret" aria-hidden="true">
                   <svg><use href="#i-chevron" /></svg>
                 </span>
               </summary>
               <p class="faq-answer">
-                Enviamos um e-mail após a confirmação de compra com o acesso para
-                fazer o download do nosso material.
+                Boa parte do problema de marmita congelada é congelar o que não
+                deveria ir ao freezer, e o material já leva isso em conta na
+                escolha dos pratos. Além disso há orientação de como guardar e
+                como finalizar na hora de comer: alguns pratos pedem um toque
+                fresco só no momento do almoço, e isso vem indicado. Não é igual
+                a comida que acabou de sair da panela, mas fica bem longe
+                daquela marmita aguada que ninguém quer almoçar.
               </p>
             </details>
 
             <details>
               <summary>
-                O acesso é liberado imediatamente após o pagamento?
+                Como funciona a organização entre geladeira e freezer?
                 <span class="caret" aria-hidden="true">
                   <svg><use href="#i-chevron" /></svg>
                 </span>
               </summary>
               <p class="faq-answer">
-                Sim! Assim que confirmado o pagamento, o e-mail com o acesso ao
-                material é enviado para você.
+                Você não precisa decidir isso por conta. Cada preparo vem
+                indicado: o que fica na geladeira para os primeiros dias e o que
+                vai para o freezer. Junto com isso há a tabela de validade, com
+                o tempo de cada tipo de preparo e como reaquecer. Essa parte faz
+                parte do planejamento, não é um detalhe que sobra para você.
               </p>
             </details>
 
             <details>
               <summary>
-                Quanto tempo preciso para preparar as marmitas?
+                Preciso saber cozinhar ou ter equipamentos específicos?
                 <span class="caret" aria-hidden="true">
                   <svg><use href="#i-chevron" /></svg>
                 </span>
               </summary>
               <p class="faq-answer">
-                Cerca de 02:30h a 03:30h em um dia, em troca de uma semana tranquila.
+                Não precisa ter prática na cozinha. As receitas foram escolhidas
+                para serem simples e o preparo vem em passo a passo, na ordem
+                certa para tudo sair junto. Sobre equipamento, há uma seção que
+                lista o mínimo necessário e o que é apenas opcional - a ideia é
+                funcionar em cozinha comum.
               </p>
             </details>
 
             <details>
               <summary>
-                Posso adaptar as receitas aos ingredientes que já tenho em casa?
+                E se eu não gostar de algum ingrediente ou não encontrar no
+                mercado?
                 <span class="caret" aria-hidden="true">
                   <svg><use href="#i-chevron" /></svg>
                 </span>
               </summary>
               <p class="faq-answer">
-                Com certeza! Pode utilizar nosso material de base e refinar com base
-                no seu gosto, total liberdade para utilizar como quiser.
+                Existe um guia de substituições com as trocas de proteína e de
+                legume que mantêm o preparo e a lista funcionando. Assim você
+                troca o que não gosta ou não achou sem precisar abandonar o
+                planejamento da semana. Tempero e ponto de sabor ficam do jeito
+                que você está acostumado.
               </p>
             </details>
 
             <details>
               <summary>
-                As receitas são difíceis de preparar?
+                As porções são suficientes para um almoço?
                 <span class="caret" aria-hidden="true">
                   <svg><use href="#i-chevron" /></svg>
                 </span>
               </summary>
               <p class="faq-answer">
-                Não, nada complexo. Mas caso você seja uma pessoa com menos
-                familiaridade na cozinha, oferecemos o passo a passo muito bem
-                detalhado.
+                As quantidades de cada preparo são calculadas para fechar os
+                cinco potes da semana, e os rendimentos vêm indicados para você
+                conferir na hora de montar.
+                Não trabalhamos com gramagem fechada nem com cálculo de
+                calorias: quem come mais ou come menos ajusta a proporção no
+                pote, em vez de seguir um número padrão.
               </p>
             </details>
 
             <details>
               <summary>
-                Por quanto tempo terei acesso ao material?
+                O Cinco Potes é uma dieta ou um plano para emagrecimento?
                 <span class="caret" aria-hidden="true">
                   <svg><use href="#i-chevron" /></svg>
                 </span>
               </summary>
               <p class="faq-answer">
-                É seu! O material tem acesso vitalício, comprando uma vez é seu para
-                sempre.
+                Não. É um planejamento prático de refeições: resolve o que comer,
+                o que comprar e como preparar. Não é dieta, não tem cálculo
+                nutricional e não substitui a orientação de um nutricionista para
+                o seu caso.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                Como recebo o material e por quanto tempo tenho acesso?
+                <span class="caret" aria-hidden="true">
+                  <svg><use href="#i-chevron" /></svg>
+                </span>
+              </summary>
+              <p class="faq-answer">
+                Assim que o pagamento é confirmado, o acesso é liberado e enviado
+                para o e-mail da compra. Dá para usar no celular ou imprimir e
+                deixar na cozinha. O acesso é vitalício: comprou uma vez, é seu,
+                e você pode voltar nas semanas quantas vezes quiser.
               </p>
             </details>
 
@@ -816,8 +982,12 @@
                 </span>
               </summary>
               <p class="faq-answer">
-                Você compra o produto e testa, se não gostar devolvemos seu dinheiro
-                imediatamente!
+                Você compra, abre o material e vê de perto como ele funciona. Se
+                não fizer sentido para a sua rotina, pode pedir o reembolso
+                dentro de 7 dias: fale com o nosso suporte - o botão do WhatsApp
+                fica aqui na página - ou solicite direto na plataforma de
+                pagamento, e o valor é devolvido integralmente. O prazo para o
+                dinheiro voltar segue o da forma de pagamento que você usou.
               </p>
             </details>
           </div>

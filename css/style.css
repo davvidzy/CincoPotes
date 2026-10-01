@@ -52,9 +52,10 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+/* Sem scroll-behavior: smooth. Os CTAs âncoram no #oferta, que fica longe
+   do hero: em celular fraco esse scroll animado de página inteira é um dos
+   momentos de maior engasgo. O salto direto é instantâneo em qualquer
+   aparelho. */
 
 body {
   margin: 0;
@@ -549,7 +550,10 @@ svg {
   height: 7px;
   border-radius: 50%;
   background: var(--line-3);
-  transition: all 0.2s ease;
+  /* só a cor faz transição. O "all" que havia aqui animava também a
+     largura, e a bolinha muda enquanto o carrossel está sendo arrastado -
+     ou seja, era layout a cada frame no meio do gesto. */
+  transition: background-color 0.2s ease;
 }
 
 .dots b.on {
@@ -826,13 +830,15 @@ svg {
   margin-inline: auto;
   padding-inline: 16px;
   pointer-events: none; /* a faixa não bloqueia o conteúdo atrás */
-  transition: bottom 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  /* anima transform, não bottom: bottom recalcula layout a cada frame da
+     transição, transform resolve na GPU */
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* barra de compra visível: o botão sobe junto, na mesma curva e no mesmo
-   tempo da barra, e para logo acima dela */
+   tempo da barra, e para logo acima dela (84px - 16px do estado parado) */
 .sticky-cta.show ~ .wa-dock {
-  bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+  transform: translateY(-68px);
 }
 
 .wa-fab {
@@ -1172,6 +1178,17 @@ svg {
   padding: 64px var(--gutter);
 }
 
+/* São 14 perguntas com respostas de 4 a 5 linhas numa coluna de ~325px.
+   No tamanho anterior (16px na pergunta, 15px na resposta, coladas uma na
+   outra) o bloco virava uma parede de texto. Fonte menor com entrelinha
+   maior e mais espaço entre os itens lê melhor do que fonte grande e
+   apertada. */
+.faq {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .faq details {
   border-top: 1px solid var(--line);
 }
@@ -1185,13 +1202,13 @@ svg {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  min-height: 64px;
-  padding: 16px 0;
+  min-height: 60px;
+  padding: 20px 0 18px;
   cursor: pointer;
   list-style: none;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  line-height: 21.6px;
+  line-height: 1.5;
   color: var(--ink);
 }
 
@@ -1222,9 +1239,9 @@ svg {
 }
 
 .faq-answer {
-  padding: 0 42px 26px 0;
-  font-size: 15px;
-  line-height: 25.5px;
+  padding: 2px 38px 30px 0;
+  font-size: 14px;
+  line-height: 1.78;
   color: var(--muted);
 }
 
@@ -1289,9 +1306,11 @@ svg {
   width: min(390px, 100%);
   margin-inline: auto;
   padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
-  background: rgba(251, 247, 240, 0.95);
-  backdrop-filter: saturate(150%) blur(12px);
-  -webkit-backdrop-filter: saturate(150%) blur(12px);
+  /* Sem backdrop-filter: blur. A 0.95 de opacidade o desfoque já era quase
+     invisível, mas custava uma composição de GPU por frame num elemento
+     fixo que fica em tela durante quase todo o scroll - caro em aparelho
+     fraco. Fundo opaco entrega o mesmo resultado de graça. */
+  background: #fbf7f0;
   box-shadow: var(--shadow-bar);
   transform: translateY(110%);
   opacity: 0;
@@ -1373,74 +1392,20 @@ svg {
 }
 
 /* ==========================================================================
-   REVEAL AO SCROLL
-   Espelha REVEAL_SELECTOR de js/main.js: se mexer em um, mexa no outro.
-   Só entra em ação quando o JS marca <html class="js">.
-
-   A lista fica dentro de :where() de propósito: sem isso um seletor como
-   ".js .fechamento > .btn" (3 classes) pesa mais que ".js .is-in" (2) e o
-   elemento nunca reaparece. Com :where() toda a lista vale (0,1,0) e quem
-   revela sempre ganha - não importa quantas classes a entrada tenha.
+   MOVIMENTO
+   O reveal ao scroll foi removido (ver js/main.js): ele escondia o conteúdo
+   em opacity:0 até o JS carregar, o que em 3G lento deixava a página em
+   branco por vários segundos. O que sobrou é só microinteração de toque -
+   nada anima durante o scroll.
    ========================================================================== */
-.js
-  :where(
-    .hero > *,
-    .sec-head > *,
-    .receber-item,
-    .band-photo,
-    .passo,
-    .apoio-card,
-    .numero,
-    .depo-card,
-    .offer-card,
-    .garantia-row,
-    .faq details,
-    .fechamento > .btn,
-    .site-footer > *
-  ) {
-  opacity: 0;
-  transform: translateY(14px);
-}
-
-.js .is-in {
-  opacity: 1;
-  transform: none;
-  transition: opacity 0.55s ease var(--rv-delay, 0s),
-    transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) var(--rv-delay, 0s);
-}
-
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  .js
-    :where(
-      .hero > *,
-      .sec-head > *,
-      .receber-item,
-      .band-photo,
-      .passo,
-      .apoio-card,
-      .numero,
-      .depo-card,
-      .offer-card,
-      .garantia-row,
-      .faq details,
-      .fechamento > .btn,
-      .site-footer > *
-    ) {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-
   .btn,
   .btn-head,
   .caret,
   .sticky-cta,
   .wa-dock,
-  .wa-fab {
+  .wa-fab,
+  .dots b {
     transition: none;
   }
 }

@@ -109,117 +109,15 @@
     });
   }
 
-  /* ---------- reveal ao scroll ----------
-     Espelha o bloco "REVEAL AO SCROLL" de css/style.css: se mexer em um,
-     mexa no outro. O CSS esconde, aqui só liberamos com .is-in. */
-  var REVEAL_SELECTOR = [
-    '.hero > *',
-    '.sec-head > *',
-    '.receber-item',
-    '.band-photo',
-    '.passo',
-    '.apoio-card',
-    '.numero',
-    '.depo-card',
-    '.offer-card',
-    '.garantia-row',
-    '.faq details',
-    '.fechamento > .btn',
-    '.site-footer > *',
-  ].join(',');
+  /* ---------- reveal ao scroll: REMOVIDO ----------
+     Medido em celular fraco com 3G lento: o reveal deixava todo o conteúdo
+     em opacity:0 até o main.js executar. Aos 6s de carregamento a tela
+     mostrava só o cabeçalho e dois blocos de cor vazios - título do hero,
+     preço e botões todos invisíveis, esperando um JS que só chegava aos
+     ~6,3s. Numa página de vendas isso é o pior momento possível para não
+     ter nada escrito na tela.
 
-  /* cascata só onde os itens entram juntos na tela; listas altas já ganham
-     escalonamento natural do próprio scroll */
-  var STAGGER_PARENTS = [
-    '.hero',
-    '.sec-head',
-    '.receber-list',
-    '.passos-track',
-    '.numeros-grid',
-    '.depo-track',
-    '.faq',
-    '.site-footer',
-  ].join(',');
-
-  var root = document.documentElement;
-  clearTimeout(window.__rvSafety);
-
-  if (!root.classList.contains('js')) return;
-
-  if (!('IntersectionObserver' in window)) {
-    root.classList.remove('js'); // sem suporte: mostra tudo, sem animação
-    return;
-  }
-
-  [].slice
-    .call(document.querySelectorAll(STAGGER_PARENTS))
-    .forEach(function (parent) {
-      var step = 0;
-      [].slice.call(parent.children).forEach(function (el) {
-        if (!el.matches(REVEAL_SELECTOR)) return;
-        el.style.setProperty('--rv-delay', Math.min(step, 4) * 0.06 + 's');
-        step++;
-      });
-    });
-
-  var revealObs = new IntersectionObserver(
-    function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        var el = en.target;
-        /* a trilha é só gatilho: quem recebe .is-in são os cards */
-        if (el.classList.contains('snap-track')) {
-          revealObs.unobserve(el);
-          [].slice.call(el.children).forEach(reveal);
-          return;
-        }
-        reveal(el);
-      });
-    },
-    { threshold: 0, rootMargin: '0px 0px -10% 0px' }
-  );
-
-  function reveal(el) {
-    el.classList.add('is-in');
-    revealObs.unobserve(el); // dispara uma vez só
-  }
-
-  var pending = [].slice.call(document.querySelectorAll(REVEAL_SELECTOR));
-  var tracked = [];
-  pending.forEach(function (el) {
-    /* Os cards do carrossel ficam fora da tela na horizontal: sozinhos nunca
-       intersectariam o viewport. O gatilho deles é a trilha inteira. */
-    var track = el.closest('.snap-track');
-    if (track) {
-      if (tracked.indexOf(track) === -1) {
-        tracked.push(track);
-        revealObs.observe(track);
-      }
-      return;
-    }
-    revealObs.observe(el);
-  });
-
-  /* Rede de segurança, 150ms depois que o scroll para. Cobre dois furos
-     do observer:
-     1. o rootMargin negativo cria uma faixa morta no fim da página - o
-        último item do rodapé nunca entraria na zona de disparo;
-     2. num scroll muito rápido o IntersectionObserver pode não chegar a
-        registrar um elemento que passou voando pela tela.
-     Nos dois casos, libera o que já deveria estar visível. */
-  var flushTimer;
-  function flushMissed() {
-    pending = pending.filter(function (el) {
-      if (el.classList.contains('is-in')) return false;
-      if (el.getBoundingClientRect().top > window.innerHeight) return true;
-      reveal(el);
-      return false;
-    });
-    if (!pending.length) window.removeEventListener('scroll', onScroll);
-  }
-  function onScroll() {
-    clearTimeout(flushTimer);
-    flushTimer = setTimeout(flushMissed, 150);
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
+     A animação em si era barata (opacity/transform, sem jank no scroll),
+     mas o custo não era de frame: era prender o conteúdo inteiro atrás do
+     download do JS. Agora o HTML aparece assim que o CSS chega. */
 })();
