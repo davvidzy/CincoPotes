@@ -352,6 +352,8 @@ svg {
   flex-direction: column;
   gap: 20px;
   padding: 64px var(--gutter);
+  /* mesmo tom do fundo do mockup, para a imagem não aparecer recortada */
+  background: #f8f4eb;
 }
 
 .hero-cta {
@@ -359,6 +361,14 @@ svg {
   flex-direction: column;
   gap: 15.5px;
   padding-top: 12px;
+}
+
+/* o mockup já tem respiro próprio: vaza até as bordas da coluna */
+.hero-mockup {
+  width: calc(100% + 2 * var(--gutter));
+  max-width: none;
+  height: auto;
+  margin: 0 calc(-1 * var(--gutter)) -24px;
 }
 
 /* ==========================================================================
